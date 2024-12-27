@@ -1,0 +1,312 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "tabStyle": "bigger",
+        "links": [
+          {
+            "id": "cd6477d4-c232-4ff5-b7aa-5efe0945be38",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Snapshot Create",
+            "subTarget": "Snapshot Create",
+            "style": "link"
+          },
+          {
+            "id": "273601b5-d638-4515-b8b5-1e3d1ce33ce6",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Snapshot Delete",
+            "subTarget": "Snapshot Delete",
+            "style": "link"
+          },
+          {
+            "id": "7afbada6-2cac-4ea9-a0a4-f3b5c06e6670",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Comparison",
+            "subTarget": "Comparison",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "links - 2"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Snapshot Create",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+              ],
+              "parameters": [
+                {
+                  "id": "dd14cfe4-59e2-4205-b318-ebf8f56768b0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "today",
+                  "type": 1,
+                  "query": "print now()\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+                  ],
+                  "timeContext": {
+                    "durationMs": 1800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions"
+                },
+                {
+                  "id": "5513ab63-7f73-4cf0-b9a7-fd91337f7001",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "yesterday",
+                  "type": 1,
+                  "query": "print now(-1d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+                  ],
+                  "timeContext": {
+                    "durationMs": 1800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions"
+                },
+                {
+                  "id": "156123ac-b155-48e6-91fc-120896cebff8",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "yesterday_plus_one",
+                  "type": 1,
+                  "query": "print now(-2d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+                  ],
+                  "timeContext": {
+                    "durationMs": 1800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions"
+                }
+              ],
+              "style": "above",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend OSDiskName = tostring(properties.storageProfile.osDisk.name),\r\n         osType = tostring(properties.storageProfile.osDisk.osType),\r\n         OSDiskResId = tolower(tostring(properties.storageProfile.osDisk.managedDisk.id)),\r\n         BAU = tostring(tags.BAU)\r\n         //| where BAU == \"Yes\"\r\n| project name, id, osType, OSDiskName, OSDiskResId, subscriptionId, BAU\r\n| join kind=leftouter\r\n(resources\r\n| where type == \"microsoft.compute/snapshots\"\r\n| extend provisioningState = tostring(properties.provisioningState)\r\n| extend OSDiskResId = tolower(tostring(properties.creationData.sourceResourceId))\r\n| extend OSDiskName = tolower(tostring(split(OSDiskResId, \"/\")[-1]))\r\n| extend osType = tostring(properties.osType)\r\n| extend timeCreated = tostring(split(properties.timeCreated, \"T\")[0])\r\n| extend Snapshottype = tostring(tags.Snapshottype)\r\n| where provisioningState == \"Succeeded\"\r\n| where isnotempty(osType)\r\n| where Snapshottype == \"Daily\"\r\n| project SnapShotName=name, timeCreated, subscriptionId, properties, tags, provisioningState, OSDiskResId, OSDiskName, osType) on OSDiskResId\r\n| project-away ['subscriptionId1']//, ['properties']\r\n| extend ['{today}'] = case(SnapShotName has \"{today}\", \"yes\", \"no\")\r\n| extend ['{yesterday}'] = case(SnapShotName has \"{yesterday}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_one}'] = case(SnapShotName has \"{yesterday_plus_one}\", \"yes\", \"no\")\r\n| summarize VMCount = dcount(name), ['{today}']=dcountif(SnapShotName, ['{today}'] == \"yes\"), ['{yesterday}']=dcountif(SnapShotName, ['{yesterday}'] == \"yes\"), ['{yesterday_plus_one}']=dcountif(SnapShotName, ['{yesterday_plus_one}'] == \"yes\"), BAU_Tag_count=dcountif(name, BAU has \"yes\")  by subscriptionId\r\n| join kind=leftouter \r\n(resourcecontainers\r\n    | where type == 'microsoft.resources/subscriptions'\r\n    | project subscriptionId, subscriptionName = name)\r\n    on subscriptionId\r\n| project-away ['subscriptionId1'], subscriptionId\r\n| project subscriptionName, VMCount, BAU_Tag_count, ['{today}'], ['{yesterday}'], ['{yesterday_plus_one}']",
+              "size": 0,
+              "title": "Snapshot Status for last 3days",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "subscriptionName",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "subscriptionName",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "name": "Snapshot Status for last 3days"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Snapshot Create"
+      },
+      "name": "Snapshot Create"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Snapshot Delete",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc/resourceGroups/bnlwe-sp03-p-00000-azmn-rg/providers/Microsoft.OperationalInsights/workspaces/bnlwe-sp03-p-la-02"
+              ],
+              "parameters": [
+                {
+                  "id": "7b06450d-b026-4601-9b12-edd887b6d167",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "yesterday_plus_two",
+                  "type": 1,
+                  "query": "print now(-3d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc/resourceGroups/bnlwe-sp03-p-00000-azmn-rg/providers/Microsoft.OperationalInsights/workspaces/bnlwe-sp03-p-la-02"
+                  ],
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions"
+                },
+                {
+                  "id": "5513ab63-7f73-4cf0-b9a7-fd91337f7001",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "yesterday_plus_three",
+                  "type": 1,
+                  "query": "print now(-4d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+                  ],
+                  "timeContext": {
+                    "durationMs": 1800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions"
+                },
+                {
+                  "id": "156123ac-b155-48e6-91fc-120896cebff8",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "yesterday_plus_four",
+                  "type": 1,
+                  "query": "print now(-5d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+                  ],
+                  "timeContext": {
+                    "durationMs": 1800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions"
+                }
+              ],
+              "style": "above",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend OSDiskName = tostring(properties.storageProfile.osDisk.name),\r\n         osType = tostring(properties.storageProfile.osDisk.osType),\r\n         OSDiskResId = tolower(tostring(properties.storageProfile.osDisk.managedDisk.id)),\r\n         BAU = tostring(tags.BAU)\r\n         //| where BAU == \"Yes\"\r\n| project name, id, osType, OSDiskName, OSDiskResId, subscriptionId, BAU\r\n| join kind=leftouter\r\n(resources\r\n| where type == \"microsoft.compute/snapshots\"\r\n| extend provisioningState = tostring(properties.provisioningState)\r\n| extend OSDiskResId = tolower(tostring(properties.creationData.sourceResourceId))\r\n| extend OSDiskName = tolower(tostring(split(OSDiskResId, \"/\")[-1]))\r\n| extend osType = tostring(properties.osType)\r\n| extend timeCreated = tostring(split(properties.timeCreated, \"T\")[0])\r\n| where provisioningState == \"Succeeded\"\r\n| where isnotempty(osType)\r\n| project SnapShotName=name, timeCreated, subscriptionId, properties, provisioningState, OSDiskResId, OSDiskName, osType) on OSDiskResId\r\n| project-away ['subscriptionId1'], properties\r\n//| summarize VMCount = count(name), SnapshotCount = count(SnapShotName) by subscriptionId, timeCreated\r\n| extend ['{yesterday_plus_two}'] = case(SnapShotName has \"{yesterday_plus_two}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_three}'] = case(SnapShotName has \"{yesterday_plus_three}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_four}'] = case(SnapShotName has \"{yesterday_plus_four}\", \"yes\", \"no\")\r\n| summarize VMCount = dcount(name), ['{yesterday_plus_two}']=dcountif(SnapShotName, ['{yesterday_plus_two}'] == \"yes\"), ['{yesterday_plus_three}']=dcountif(SnapShotName, ['{yesterday_plus_three}'] == \"yes\"), ['{yesterday_plus_four}']=dcountif(SnapShotName, ['{yesterday_plus_four}'] == \"yes\"),  BAU_Tag_count=dcountif(name, BAU has \"Yes\")  by subscriptionId\r\n| join kind=leftouter \r\n(resourcecontainers\r\n    | where type == 'microsoft.resources/subscriptions'\r\n    | project subscriptionId, subscriptionName = name)\r\n    on subscriptionId\r\n| project-away ['subscriptionId1'], subscriptionId\r\n| project subscriptionName, VMCount, BAU_Tag_count, ['{yesterday_plus_two}'], ['{yesterday_plus_three}'], ['{yesterday_plus_four}']",
+              "size": 0,
+              "title": "Snapshot Status for last 3days",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "Snapshot Status for last 3days"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Snapshot Delete"
+      },
+      "name": "Snapshot Delete"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Comparison",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+              ],
+              "parameters": [
+                {
+                  "id": "dd14cfe4-59e2-4205-b318-ebf8f56768b0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "today",
+                  "type": 2,
+                  "query": "range Days from ago(3d) to now() step 1d\r\n| project Days = tostring(split(Days, \"T\")[0])",
+                  "crossComponentResources": [
+                    "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 1800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.resources/subscriptions",
+                  "value": null
+                }
+              ],
+              "style": "above",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend OSDiskName = tostring(properties.storageProfile.osDisk.name),\r\n         osType = tostring(properties.storageProfile.osDisk.osType),\r\n         OSDiskResId = tolower(tostring(properties.storageProfile.osDisk.managedDisk.id)),\r\n         BAU = tostring(tags.BAU)\r\n         //| where BAU == \"Yes\"\r\n| project name, id, osType, OSDiskName, OSDiskResId, subscriptionId, BAU\r\n| join kind=leftouter\r\n(resources\r\n| where type == \"microsoft.compute/snapshots\"\r\n| extend provisioningState = tostring(properties.provisioningState)\r\n| extend OSDiskResId = tolower(tostring(properties.creationData.sourceResourceId))\r\n| extend OSDiskName = tolower(tostring(split(OSDiskResId, \"/\")[-1]))\r\n| extend osType = tostring(properties.osType)\r\n| extend timeCreated = tostring(split(properties.timeCreated, \"T\")[0])\r\n| extend Snapshottype = tostring(tags.Snapshottype)\r\n| where isnotempty(osType)\r\n| where Snapshottype == \"Daily\"\r\n| project SnapShotName=name, timeCreated, subscriptionId, properties, tags, provisioningState, OSDiskResId, OSDiskName, osType) on OSDiskResId\r\n| project-away ['subscriptionId1']//, ['properties']\r\n| extend ['{today}'] = case(SnapShotName has \"{today}\", \"yes\", \"no\")\r\n| extend provisioningState = tostring(properties.provisioningState)\r\n| extend Succeeded = case(provisioningState == \"Succeeded\", \"yes\", \"no\")\r\n| extend Failed = case(provisioningState == \"Failed\", \"yes\", \"no\")\r\n| summarize VMCount = dcount(name), ['{today}']=dcountif(SnapShotName, ['{today}'] == \"yes\"), BAU_Tag_count=dcountif(name, BAU has \"yes\"), Succeeded=dcountif(SnapShotName, Succeeded == \"yes\" and ['{today}'] == \"yes\"), Failed=dcountif(SnapShotName, Failed == \"yes\" and ['{today}'] == \"yes\")  by subscriptionId\r\n| join kind=leftouter \r\n(resourcecontainers\r\n    | where type == 'microsoft.resources/subscriptions'\r\n    | project subscriptionId, subscriptionName = name)\r\n    on subscriptionId\r\n| project-away ['subscriptionId1'], subscriptionId\r\n| project subscriptionName, VMCount, BAU_Tag_count, \r\n//['{today}'], \r\n['Succeeded {today}']=Succeeded, ['Failed {today}']=Failed",
+              "size": 0,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Comparison"
+            },
+            "name": "query - 0"
+          }
+        ]
+      },
+      "name": "group - 3"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
