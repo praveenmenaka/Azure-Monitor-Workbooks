@@ -1,0 +1,819 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "<h1> Azure Arc </h1>",
+        "style": "info"
+      },
+      "name": "text - 6"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": ""
+      },
+      "customWidth": "30",
+      "name": "text - 10"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "f9eebcc5-e431-4184-afb4-1c99f99322d1",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Overall",
+            "subTarget": "Overall",
+            "preText": "",
+            "style": "link"
+          },
+          {
+            "id": "6d824134-1e9f-4e89-8d05-0161ba3a169c",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Summary",
+            "subTarget": "Summary",
+            "style": "link"
+          },
+          {
+            "id": "23188678-0bdb-4c15-9132-9566a8707a02",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Search",
+            "subTarget": "Search",
+            "style": "link"
+          },
+          {
+            "id": "4a49a004-5d22-4fdc-9f3f-88b9531a12f4",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "VM_Discovery",
+            "subTarget": "VM_Discovery",
+            "style": "link"
+          },
+          {
+            "id": "82c823a8-beaa-413b-8199-57cd66864969",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Database_Discovery",
+            "subTarget": "Database_Discovery",
+            "style": "link"
+          },
+          {
+            "id": "70c4201e-658d-4076-9bb1-3b32fb9898e8",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "ESU",
+            "subTarget": "ESU",
+            "style": "link"
+          }
+        ]
+      },
+      "customWidth": "50",
+      "name": "links - 9"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend lastStatusChangeAgo_t = now() - lastStatusChange\r\n| extend daysAgo = toint(lastStatusChangeAgo_t / 1d)\r\n| extend hoursAgo = toint((lastStatusChangeAgo_t % 1d) / 1h)\r\n| extend minsAgo = toint((lastStatusChangeAgo_t % 1h) / 1m)\r\n| extend  lastStatusChangeAgo = strcat(daysAgo, \" days, \", hoursAgo, \" hours, \", minsAgo, \" mins\")\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend CPU_count = tostring(properties.detectedProperties.processorCount)\r\n| extend core_count = tostring(properties.detectedProperties.coreCount)\r\n| extend logical_core_count = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case((Manufacturer contains \"Amazon\" or Manufacturer contains \"Microsoft\" or Manufacturer contains \"Google\"), \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| extend adDomain = toupper(tostring(split(adFqdn, \".\")[1]))\r\n| project serverName=displayName, serverId=id, Agent_Version=substring(AgentVersion, 0, 4), AgentStatus=himds, lastStatusChange, lastStatusChangeAgo, osType, osVersion,  guestconfiguration, ExtensionService, adFqdn, dnsFqdn, IP, IP_Version, subnet, Manufacturer, Model, Host, CPU_count, core_count, logical_core_count, MachineType, SiteCode, adDomain\r\n//| where osVersion contains \"2012\"\r\n| join kind=leftouter (\r\n    resources\r\n    | where type == \"microsoft.hybridcompute/machines/licenseprofiles\"\r\n    | project\r\n        licenseid = tostring(properties.esuProfile.assignedLicense),\r\n        serverId = replace(\"/licenseProfiles/default\", \"\", id),\r\n        serverName=tolower(tostring(split(id, \"/\")[8]))\r\n    )\r\n    on serverId\r\n    | join kind=leftouter(\r\n    resources\r\n| where type == \"microsoft.hybridcompute/licenses\"\r\n| project \r\n    name,\r\n    licenseid = tostring(id),\r\n    core_type = properties.licenseDetails.type,\r\n    license_state = properties.licenseDetails.state,\r\n    //target = properties.licenseDetails.target,\r\n    edition = properties.licenseDetails.edition,\r\n    processors = properties.licenseDetails.processors,\r\n    assignedLicenses = properties.licenseDetails.assignedLicenses) on licenseid\r\n    | project-away serverName1, name, licenseid1\r\n    ",
+              "size": 0,
+              "title": "Arc Machines",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "lastStatusChange",
+                    "formatter": 6,
+                    "dateFormat": {
+                      "showUtcTime": null,
+                      "formatName": "shortDateTimePattern"
+                    }
+                  },
+                  {
+                    "columnMatch": "lastStatusChange ago",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 0,
+                      "options": {
+                        "style": "decimal",
+                        "useGrouping": true,
+                        "minimumIntegerDigits": 1,
+                        "minimumFractionDigits": 1,
+                        "maximumFractionDigits": 1,
+                        "minimumSignificantDigits": 1,
+                        "maximumSignificantDigits": 1
+                      }
+                    },
+                    "tooltipFormat": {
+                      "tooltip": "{0} Days ago"
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "Arc Machines"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Overall"
+      },
+      "name": "Overall"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tostring(properties.displayName)\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend noCPU = tostring(properties.detectedProperties.processorCount)\r\n| extend noCores = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case(Model == \"Virtual Machine\", \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| summarize count() by osVersion",
+              "size": 3,
+              "title": "Summary by OS version",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "count_"
+                ],
+                "group": "osVersion",
+                "createOtherGroup": 6,
+                "showLegend": true,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Connected",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Disconnected",
+                    "color": "redBright"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "25",
+            "name": "Summary by OS version",
+            "styleSettings": {
+              "maxWidth": "25",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tostring(properties.displayName)\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend noCPU = tostring(properties.detectedProperties.processorCount)\r\n| extend noCores = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case(Model == \"Virtual Machine\", \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| summarize count() by MachineType",
+              "size": 3,
+              "title": "Summary by MachineType",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "count_"
+                ],
+                "createOtherGroup": 1000,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Connected",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Disconnected",
+                    "color": "redBright"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "25",
+            "name": "Summary by MachineType",
+            "styleSettings": {
+              "maxWidth": "25",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tostring(properties.displayName)\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend noCPU = tostring(properties.detectedProperties.processorCount)\r\n| extend noCores = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case(Model == \"Virtual Machine\", \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| summarize count() by Agent_Version=substring(AgentVersion, 0, 4)",
+              "size": 3,
+              "title": "Summary by AgentVersion",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "count_"
+                ],
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Connected",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Disconnected",
+                    "color": "redBright"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "25",
+            "name": "Summary by AgentVersion",
+            "styleSettings": {
+              "maxWidth": "25",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tostring(properties.displayName)\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend noCPU = tostring(properties.detectedProperties.processorCount)\r\n| extend noCores = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case(Model == \"Virtual Machine\", \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| summarize count() by himds",
+              "size": 3,
+              "title": "Summary by Agent Status",
+              "exportFieldName": "series",
+              "exportParameterName": "selectedLegend",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "count_"
+                ],
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Connected",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Disconnected",
+                    "color": "redBright"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "25",
+            "showPin": true,
+            "name": "Summary by Agent Status",
+            "styleSettings": {
+              "maxWidth": "25",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "_____________________________________________________________________________________________________________________"
+            },
+            "name": "text - 7 - Copy"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where tolower(resourceGroup) == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| project licenseAssignmentState=tostring(properties.licenseProfile.esuProfile.licenseAssignmentState),\r\n          esuEligibility=tostring(properties.licenseProfile.esuProfile.esuEligibility)\r\n          | extend [\"License Assignment state and esu Eligibility\"] = strcat(licenseAssignmentState, \" & \", esuEligibility)\r\n          | summarize count() by [\"License Assignment state and esu Eligibility\"]",
+              "size": 3,
+              "title": "License Assignment state and esu Eligibility",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "30",
+            "name": "License Assignment state and esu Eligibility",
+            "styleSettings": {
+              "maxWidth": "30",
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Summary"
+      },
+      "name": "Summary"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "a1d764cc-492b-4e13-a29c-8392d0df85f5",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Search",
+                  "label": "🔎 Search",
+                  "type": 1,
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "value": "abtsifs20001 adasifs20001 agpsccm10003 agpsifs10001 aiedupapps20002 aiedupapps20003 aiedupapps20004 alxsfsr20002 alxsfsr20002 arasapp20001 arasapp20002 arashyp20001 arashyp20002 as1sifs30002 athsfsr20002 beispsr20001 bgrsapp10004 bo1sfsr30002 bo1sfsr30002 botsfsr20001 brgsifs20001 brssfsr20001 bttsifs20001 buxsfsr20001 buxspsr20001_dontpoweron cassfsr20001 cdssccm10003 cdssifs10001 cmgsfsr20001 copsfsr20001 dkmsfsr20001 dkmsfsr20001 ebasfsr20001 ebpsfsr20001 ebpsifs20002 ebrsfsr20001 ebysfsr20001 enysfsr20001 eposfsr20001 eposifs20001 eprsfsr21007 eprsifs21002 epzsfsr20001 erisfsr20001 erosfsr20001 esfsfsr20001 esksfsr20001 etasfsr20001 evesfsr20001 evisfsr20001 ewasfsr20001 ewasfsr20009 faesfsr20001 faesifs20001 fbisfsr20001 fcgsfsr20001 fcvsfsr20001 fflsfsr20001 fglsfsr20001 fglsifs20001 fhdsapp20015 fhdsfsr20001 fhnsfsr21002 fhpsfsr20001 fiwsfsr20001 fllsfsr20001 fonsfsr20001 fpasfsr20001 frdsfsr21005 frosfsr20001 fsdsfsr20001 ftnsfsr20001 gfrfsqw200006 gfrfsqw200010 gfrfsqw200012 gh1sifs30001 glfsccm10003 glfsifs10001 haisapp20007 haisapp20008 haisapp20028 haisapp20036 haishyp20002 haishyp20006 helsfsr20001 horsccm10003 horsifs10001 ig1sifs30001 ip1sifs30001 istsfsr20003 istsfsr20003 jk1spsr30001 jk1spsr30001 kcbsfsr20001 kessfsr20002 kessfsr20002 kesshyp20002 kesshyp20004 kesshyp20004 kinsfsr20001 ldnsfsr20003 ldnsifs20003 ldssfsr20001 mansfsr20002 mazsfsr20001 megsfsr10001 midsifs20001 nrksapp10003 nrksapp10004 nrkshyp10002 ntrsapp30245 ntrsapp30245 ntrsapp30247 octsifs20001 odesfsr20001 orasifs20001 pslsfsr20001 rchsfsr20005 rensfsr20001 rpssfsr20001 rwasfsr20001 schsfsr20001 sd1sifs30001 sgmsifs10001 sgpsappw201 sgpsappw205 sgpsappw301 stosfsr21005 uclsapp10017 uclsccm10003 uclshyp10005 udcsifs20001 udcsifs20001 udcsifs20001 udcsifs20001 ufbsfsr20001 ugpsccm10003 ugpsifs10002 uhhsfsr21002 ulaspsr10001 ulaspsr10001 umhsifs20001 uthsfnp10004 uthsfnp10004 vn2sifs30001 wbjsccm10003 ygfsccm10003 zfasapp20001 zfasapp20002 zfashyp20001"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "80",
+            "name": "parameters - 0"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "parameters": [
+                {
+                  "id": "efa69277-14bd-4720-b49e-200f0a3d8a03",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VM_Count",
+                  "label": "🖥️VM_Count",
+                  "type": 1,
+                  "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| where displayName in (split(\"{Search}\", ' '))\r\n| count",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "20",
+            "name": "parameters - 2"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| where displayName in (split(\"{Search}\", ' '))\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend lastStatusChangeAgo_t = now() - lastStatusChange\r\n| extend daysAgo = toint(lastStatusChangeAgo_t / 1d)\r\n| extend hoursAgo = toint((lastStatusChangeAgo_t % 1d) / 1h)\r\n| extend minsAgo = toint((lastStatusChangeAgo_t % 1h) / 1m)\r\n| extend  lastStatusChangeAgo = strcat(daysAgo, \" days, \", hoursAgo, \" hours, \", minsAgo, \" mins\")\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend CPU_count = tostring(properties.detectedProperties.processorCount)\r\n| extend core_count = tostring(properties.detectedProperties.coreCount)\r\n| extend logical_core_count = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case(Model in (\"Virtual Machine\", \"VMware Virtual Platform\"), \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| project serverName=displayName, serverId=id, Agent_Version=substring(AgentVersion, 0, 4), AgentStatus=himds, lastStatusChange, lastStatusChangeAgo, osType, osVersion,  guestconfiguration, ExtensionService, adFqdn, dnsFqdn, IP, IP_Version, subnet, Manufacturer, Model, Host, CPU_count, core_count, logical_core_count, MachineType, SiteCode\r\n| join kind=leftouter (\r\n    resources\r\n    | where type == \"microsoft.hybridcompute/machines/licenseprofiles\"\r\n    | project\r\n        licenseid = tostring(properties.esuProfile.assignedLicense),\r\n        //serverid = replace(\"/licenseProfiles/default\", \"\", id),\r\n        serverName=tolower(tostring(split(id, \"/\")[8]))\r\n    )\r\n    on serverName\r\n    | join kind=leftouter(\r\n    resources\r\n| where type == \"microsoft.hybridcompute/licenses\"\r\n| project \r\n    name,\r\n    licenseid = tostring(id),\r\n    core_type = properties.licenseDetails.type,\r\n    license_state = properties.licenseDetails.state,\r\n    //target = properties.licenseDetails.target,\r\n    edition = properties.licenseDetails.edition,\r\n    processors = properties.licenseDetails.processors,\r\n    assignedLicenses = properties.licenseDetails.assignedLicenses) on licenseid\r\n    | project-away serverName1, name, licenseid1\r\n",
+              "size": 0,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "lastStatusChange",
+                    "formatter": 6,
+                    "dateFormat": {
+                      "showUtcTime": null,
+                      "formatName": "shortDateTimePattern"
+                    }
+                  },
+                  {
+                    "columnMatch": "lastStatusChange ago",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 0,
+                      "options": {
+                        "style": "decimal",
+                        "minimumIntegerDigits": 1,
+                        "minimumFractionDigits": 1,
+                        "maximumFractionDigits": 1,
+                        "minimumSignificantDigits": 1,
+                        "maximumSignificantDigits": 1
+                      }
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "AgentStatus",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "AgentStatus",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "name": "query - 2"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "parameters": [
+                {
+                  "id": "7592e69e-6471-44f1-834b-63383b4e2ad7",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LastRefreshed",
+                  "label": "Last Refreshed (GMT)",
+                  "type": 1,
+                  "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| where displayName in (split(\"{Search}\", ' '))\r\n| count\r\n| extend GMT= now()\r\n| extend IST = now(+5h+30min)\r\n| extend GMTDateTime = format_datetime(GMT, 'yyyy-MM-dd HH:mm:ss')\r\n| extend ISTDateTime = format_datetime(IST, 'yyyy-MM-dd HH:mm:ss')\r\n| project GMTDateTime",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Last_refreshed",
+                  "label": " Last Refreshed (IST)",
+                  "type": 1,
+                  "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| where displayName in (split(\"{Search}\", ' '))\r\n| count\r\n| extend GMT= now()\r\n| extend IST = now(+5h+30min)\r\n| extend GMTDateTime = format_datetime(GMT, 'yyyy-MM-dd HH:mm:ss')\r\n| extend ISTDateTime = format_datetime(IST, 'yyyy-MM-dd HH:mm:ss')\r\n| project ISTDateTime",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "id": "c2fdb189-38fd-46fb-aef3-eef965faeabc"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "30",
+            "name": "parameters - 3"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Search"
+      },
+      "name": "Search"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Instances & Databases ",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.azurearcdata/sqlserverinstances/databases\"\r\n| where name !in (\"master\", \"model\", \"tempdb\", \"msdb\")\r\n| project \r\n    name,\r\n    sizeMB = toint(properties.sizeMB),\r\n    DB_id=id,\r\n    instance_id = tostring(split(id, \"/Databases/\")[0])\r\n| join kind=inner (\r\n    resources\r\n    | where type == \"microsoft.azurearcdata/sqlserverinstances\"\r\n| project \r\n    instance = tostring(properties.instanceName),\r\n    host = tostring(split(properties.containerResourceId, \"/\")[-1]),\r\n    instance_id = tostring(id),\r\n    version = properties.version,\r\n    edition = properties.edition,\r\n    patchLevel = properties.patchLevel,\r\n    staticPorts = properties.tcpStaticPorts,\r\n    dynamicPorts = properties.tcpDynamicPorts\r\n) on instance_id\r\n| project-away instance_id1\r\n",
+              "size": 0,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "instance",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "host",
+                    "formatter": 5
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "host",
+                    "instance"
+                  ]
+                }
+              }
+            },
+            "name": "query - 0"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Database_Discovery"
+      },
+      "name": "group - 6"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "ESU details",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n//| where tolower(resourceGroup) == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend licenseAssignmentState=tostring(properties.licenseProfile.esuProfile.licenseAssignmentState),\r\n          serverName=tolower(tostring(properties.displayName)),\r\n          processorCount = tostring(properties.detectedProperties.processorCount),\r\n            core_count = tostring(properties.detectedProperties.coreCount),\r\n            osVersion = tostring(properties.osSku)\r\n          | where osVersion contains \"2012\"\r\n          | project serverName, licenseAssignmentState, processorCount, core_count, osVersion\r\n          | join kind=leftouter (\r\n          resources\r\n    | where type == \"microsoft.hybridcompute/machines/licenseprofiles\"\r\n    | extend\r\n        licenseid = tostring(properties.esuProfile.assignedLicense),\r\n        serverid = replace(\"/licenseProfiles/default\", \"\", id),\r\n        serverName=tolower(tostring(split(id, \"/\")[8])),\r\n        serverType=tolower(tostring(properties.esuProfile.serverType)),\r\n        esuEligibility=tolower(tostring(properties.esuProfile.esuEligibility)),\r\n        esuKeyState=tolower(tostring(properties.esuProfile.esuKeyState))\r\n        | project serverName, serverid, serverType, licenseid, esuEligibility, esuKeyState) on serverName\r\n        | project-away serverName1\r\n        | join kind=leftouter(\r\n        resources\r\n| where type == \"microsoft.hybridcompute/licenses\"\r\n| project \r\n    name,\r\n    licenseid_t = tostring(id),\r\n    core_type = properties.licenseDetails.type,\r\n    license_state = properties.licenseDetails.state,\r\n    edition = properties.licenseDetails.edition,\r\n    processors = properties.licenseDetails.processors,\r\n    assignedLicenses = properties.licenseDetails.assignedLicenses) on $left.licenseid==$right.licenseid_t\r\n| order by ['esuEligibility'] asc\r\n| where license_state == \"Activated\"\r\n| summarize total_cores = max(toint(processors)), assigned_licenses = max(toint(assignedLicenses)), linkedResourcesCount=count(), linkedResourcesCoreCount=sum(toint(core_count)) by name\r\n| extend remainingCores = total_cores - linkedResourcesCoreCount",
+              "size": 0,
+              "title": "ESU License cores remaining",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ]
+            },
+            "name": "ESU License cores remaining"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "Please click on a LicenseName to list out the License Profiles",
+              "style": "info"
+            },
+            "name": "text - 2"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/licenses\"\r\n| project \r\n    name,\r\n    licenseid = tostring(id),\r\n    core_type = tostring(properties.licenseDetails.type),\r\n    license_state = tostring(properties.licenseDetails.state),\r\n    target = tostring(properties.licenseDetails.target),\r\n    edition = tostring(properties.licenseDetails.edition),\r\n    processors = tostring(properties.licenseDetails.processors),\r\n    assignedLicenses = tostring(properties.licenseDetails.assignedLicenses), properties",
+              "size": 0,
+              "title": "ESU Licenses",
+              "exportFieldName": "licenseid",
+              "exportParameterName": "selecedLicense",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "$gen_link_licenseid_1",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "$gen_link_licenseid_1",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "customWidth": "50",
+            "name": "ESU Licenses"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n    | where type == \"microsoft.hybridcompute/machines/licenseprofiles\"\r\n    | project\r\n        licenseid = tostring(properties.esuProfile.assignedLicense),\r\n        serverid = replace(\"/licenseProfiles/default\", \"\", id),\r\n        serverName=tolower(tostring(split(id, \"/\")[8])),\r\n        esuEligibility=tostring(properties.esuProfile.esuEligibility),\r\n        esuKeyState=tostring(properties.esuProfile.esuKeyState),\r\n        serverType=tostring(properties.esuProfile.serverType)\r\n    | where licenseid == \"{selecedLicense}\"",
+              "size": 0,
+              "title": "ESU License Profles",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "customWidth": "50",
+            "name": "ESU License Profles"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| extend himds = tostring(properties.status)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| project serverName=displayName, serverId=id, Agent_Version=substring(AgentVersion, 0, 4), AgentStatus=himds, osVersion,  resourceGroup\r\n| where osVersion contains \"2012\"",
+              "size": 0,
+              "title": "ESU Servers",
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "ESU Servers"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgspw200041\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgspw200039\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgspw200038\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgspw200040\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgspw200037\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgfqw100001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlgfpw100007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gnlfrpw100001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gfrgsqw200022\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gfrgsqw200024\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gfrgsqw200023\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gfrgsdw200011\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"gfrgsdw200010\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nrksapp10003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khospsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20032\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kesspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ic3sapp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ic3sapp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jktsapp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20011\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20031\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20035\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20030\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20031\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20034\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebpsapp20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dhksapp10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dhksapp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"buxsapp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ctgsapp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ctgsapp10005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bgrsapp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bgrsapp10003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"umhsapp20005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10012\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ugpw00711\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10014\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pslsapp20029\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pslsvm1321zbb2\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"\\\",\\r\\n        \\\"support_group\\\":  \\\"\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mumsfpr10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20031\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20027\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"istsapp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ff1sifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haishyp20011\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"epzsapp20014\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ewasapp20068\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"epzsapp20013\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ewasapp20067\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dhksapp10012\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebysapp20010\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ekdsapp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebysapp20009\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ekdsapp20005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bbgsfims1\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"zfaspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uthspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"\\\",\\r\\n        \\\"support_group\\\":  \\\"\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"utfspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"umtspsr20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"umhshyp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"umhsapp20004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uhkspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ulaspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uhhspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ufbspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"udcsifs20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10013\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10009\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10011\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"tyfspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ubfspsr10005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"\\\",\\r\\n        \\\"support_group\\\":  \\\"\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"tunspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"tpespsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"tcospsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"sgpsappw301\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"sbysifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"rpsspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"rwaspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"rndspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"renspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"rdmspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"rchspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"rbpsifs30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"qndshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"qndsapp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"psgspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pslspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pkbsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pdgsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"orespsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"octspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ntrspsr30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ntrsapp30247\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ntospsr30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nrkspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nrkshyp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nrksapp10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nebspsr30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nabspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mumsfsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mpcspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mlgsifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"megspsr10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mazspsr20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mdnsifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"manspsr20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"\\\",\\r\\n        \\\"support_group\\\":  \\\"\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"manspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mansapp20012\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mansapp20015\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"li1spsr30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"lhrspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ldsspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ksospsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kydspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kydshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kydsccm20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kinspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khoshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10009\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kesshyp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kesshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20037\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20035\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20034\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20033\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20028\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20030\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20029\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20026\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bu1spsr30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kessapp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jmbsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jktspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jktsapp10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jktsapp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jk1spsr30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"istspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jbrsifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"istshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ic3sapp10000\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"hrbsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"hn3sifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"he2sifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"hcfspsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"harsccm20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haispsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20035\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20034\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20032\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20033\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20025\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20010\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fsxspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ftnspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fsdspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fsdsapp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"frospsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fpaspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fonspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fllspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fiwspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhnspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhpspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdshyp20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdshyp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20042\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20044\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20045\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20041\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20043\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20040\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20039\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20036\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20038\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20037\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20033\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20032\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fglspsr20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20028\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fhdsapp20029\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fflspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fcvspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fcgspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"fbispsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"faespsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ezasifs20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"evispsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"evespsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"esvspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"esfspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"erospsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"erispsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"epzspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"eprspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"epzsapp20012\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"epospsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"enyspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ekvspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ekdshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ekdsapp20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebyspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebysapp20008\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebrspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebpshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebpsapp20006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebaspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dkmspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dkmshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dkmsfsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dhksapp10008\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"cvtspsr10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"\\\",\\r\\n        \\\"support_group\\\":  \\\"\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ctgshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dhksapp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ctgsapp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ctgsapp10006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"csbspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"crbsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"cmgspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"casspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"buxshyp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"buxsapp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"eskspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"buxshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"brsspsr20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"brgspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"botspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"blospsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bgrsapp10004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bgrshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bgrsapp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"beispsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"athspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"araspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"apcspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"agbspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"acrspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduudbws20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduuapps20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduuapps20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduudbws20006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqdbws20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqapps20011\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqdbws20006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqdbws20004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqapps20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqapps20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqapps20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduqapps20009\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedupapps20004\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedupapps20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedupapps20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedugsqap20010\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedugsqap20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedugsqap20008\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmuws20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmuap20009\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmuap20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmuap20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmuap20008\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmuap20005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmqap20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmqap20006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmqap20000\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmqap20008\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpws20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20502\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20505\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20509\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20507\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20506\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20503\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20006\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20501\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20014\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpdb20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20514\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20509\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20508\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20506\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20511\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20510\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20504\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20023\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20505\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20501\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20502\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20021\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20016\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20013\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20018\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20019\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20017\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20012\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aiedudmpap20011\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"zrasifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"umhsapp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclshyp10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"uclsapp10010\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pmrsfsr10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nsgsifs30001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"mumsapp10007\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"khosapp10010\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kesshyp20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ic1sifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"hrbsapp10005\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haishyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"bdgsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"acrsapp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"upgsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"srmsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"smgsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"sgpsappw205\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pslshyp20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"plksifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"plbsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"nrkshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"istsfsr20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ic3shyp10000\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haishyp20003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haisapp20028\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ewasfsr20009\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ewasapp20066\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"etasifs10003\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ebpsifs20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"tbdsifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"haishyp20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"aieduuapps20002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"sgpsappw201\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"lpgsifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"jktshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dhkshyp10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Wintel\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"dpssifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-ID-Print\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"pmrsifs10001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"Yes\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-IN-HP EC GCI WIN\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"kcbspsr20001\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"\\\",\\r\\n        \\\"support_group\\\":  \\\"\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"name\\\":  \\\"ptksifs10002\\\",\\r\\n        \\\"operational_status\\\":  \\\"Operational\\\",\\r\\n        \\\"u_operationally_accepted\\\":  \\\"No\\\",\\r\\n        \\\"support_group\\\":  \\\"IT-GLO-Proj-Wintel\\\"\\r\\n    }\\r\\n]\\r\\n\",\"transformers\":null}",
+              "size": 0,
+              "title": "04-03-2024 ---- ESU Servers - SNOW Status",
+              "queryType": 8,
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "04-03-2024 ---- ESU Servers - SNOW Status"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\",\"mergeType\":\"leftouter\",\"leftTable\":\"ESU Servers\",\"rightTable\":\"04-03-2024 ---- ESU Servers - SNOW Status\",\"leftColumn\":\"serverName\",\"rightColumn\":\"name\"}],\"projectRename\":[{\"originalName\":\"[ESU Servers].serverName\",\"mergedName\":\"serverName\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[ESU Servers].serverId\",\"mergedName\":\"serverId\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[ESU Servers].Agent_Version\",\"mergedName\":\"Agent_Version\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[ESU Servers].AgentStatus\",\"mergedName\":\"AgentStatus\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[ESU Servers].osVersion\",\"mergedName\":\"osVersion\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[ESU Servers].resourceGroup\",\"mergedName\":\"resourceGroup\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[04-03-2024 ---- ESU Servers - SNOW Status].name\",\"mergedName\":\"name\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[04-03-2024 ---- ESU Servers - SNOW Status].operational_status\",\"mergedName\":\"operational_status\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[04-03-2024 ---- ESU Servers - SNOW Status].u_operationally_accepted\",\"mergedName\":\"u_operationally_accepted\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"},{\"originalName\":\"[04-03-2024 ---- ESU Servers - SNOW Status].support_group\",\"mergedName\":\"support_group\",\"fromId\":\"46f870ce-2784-48f7-af5f-f19f87ad604b\"}]}",
+              "size": 0,
+              "title": "ESU Servers + SNOW",
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 7,
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "showPin": false,
+            "name": "ESU Servers + SNOW"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| where tolower(resourceGroup) == 'bnlwe-fs01-p-930298-pa01-rg'\r\n| project\r\n    name = tolower(properties.displayName),\r\n    server_id = id,\r\n    region = location,\r\n    os_version = properties.osSku,\r\n    model = properties.detectedProperties.model,\r\n    core_count = properties.detectedProperties.coreCount,\r\n    csp = properties.detectedProperties.cloudprovider\r\n| where os_version contains \"Windows Server 2012\"\r\n| extend is_virtual = case ((model in (\"Virtual Machine\", \"VMware Virtual Platform\") or csp in (\"AWS\", \"GCP\")), true, false)\r\n| extend core_type = case(is_virtual, \"vCore\", \"pCore\")\r\n| extend edition = split(os_version, \" \")[-1]\r\n| extend esu_license = strcat(\"ESUs-\", tolower(edition), \"-\", core_type, \"-license-01\")\r\n| join kind=leftouter (\r\n    resources\r\n    | where type == \"microsoft.hybridcompute/machines/licenseprofiles\"\r\n    | project\r\n        license_id = tostring(properties.esuProfile.assignedLicense),\r\n        server_id = replace(\"/licenseProfiles/default\", \"\", id)\r\n    )\r\n    on server_id\r\n| extend is_linked = toupper(esu_license) == toupper(split(license_id, \"/\")[-1])\r\n| project-away license_id, server_id1\r\n//| where is_linked == 0\r\n| order by ['name'] asc\r\n",
+              "size": 0,
+              "title": "ESU License Enablement",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "ESU License Enablement"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "ESU"
+      },
+      "name": "group - 7"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "RemoteSite VMs for Discovery",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.hybridcompute/machines\"\r\n| where resourceGroup == \"bnlwe-fs01-p-930298-pa01-rg\"\r\n| extend displayName = tolower(tostring(properties.displayName))\r\n| extend lastStatusChange = todatetime(properties.lastStatusChange)\r\n| extend lastStatusChangeAgo_t = now() - lastStatusChange\r\n| extend daysAgo = toint(lastStatusChangeAgo_t / 1d)\r\n| extend hoursAgo = toint((lastStatusChangeAgo_t % 1d) / 1h)\r\n| extend minsAgo = toint((lastStatusChangeAgo_t % 1h) / 1m)\r\n| extend  lastStatusChangeAgo = strcat(daysAgo, \" days, \", hoursAgo, \" hours, \", minsAgo, \" mins\")\r\n| extend himds = tostring(properties.status)\r\n| extend guestconfiguration = tostring(properties.serviceStatuses.guestConfigurationService.status)\r\n| extend ExtensionService = tostring(properties.serviceStatuses.extensionService.status)\r\n| extend IP = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].address)\r\n| extend IP_Version = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].ipAddressVersion)\r\n| extend subnet = tostring(properties.networkProfile.networkInterfaces[0].ipAddresses[0].subnet.addressPrefix)\r\n| extend adFqdn = tostring(properties.adFqdn)\r\n| extend dnsFqdn = tostring(properties.dnsFqdn)\r\n| extend osType = tostring(properties.osType)\r\n| extend osVersion = tostring(properties.osSku)\r\n| extend Manufacturer = tostring(properties.detectedProperties.manufacturer)\r\n| extend Model = tostring(properties.detectedProperties.model)\r\n| extend Host = case(Model == \"Virtual Machine\", tostring(tags.parent), \"NA\")\r\n| extend CPU_count = tostring(properties.detectedProperties.processorCount)\r\n| extend core_count = tostring(properties.detectedProperties.coreCount)\r\n| extend logical_core_count = tostring(properties.detectedProperties.logicalCoreCount)\r\n| extend MachineType = case(Model in (\"Virtual Machine\", \"VMware Virtual Platform\"), \"Virtual Machine\", \"Physical Machine\")\r\n| extend SiteCode = toupper(substring(displayName, 0, 3))\r\n| extend AgentVersion = tostring(properties.agentVersion)\r\n| extend has_sql = tostring(properties.detectedProperties.mssqldiscovered)\r\n| extend csp = tostring(properties.detectedProperties.cloudprovider)\r\n| where csp !in (\"AWS\", \"GCP\")\r\n| project serverName=displayName, serverId=id, adFqdn, Agent_Version=substring(AgentVersion, 0, 4), AgentStatus=himds, lastStatusChange, lastStatusChangeAgo, osType, osVersion,  guestconfiguration, ExtensionService,  dnsFqdn, IP, IP_Version, subnet, Manufacturer, Model, Host, CPU_count, core_count, logical_core_count, MachineType, SiteCode, has_sql, csp",
+              "size": 0,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "query - 0"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "VM_Discovery"
+      },
+      "name": "group - 8"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
