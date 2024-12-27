@@ -1,0 +1,1546 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "<img src=\"https://www.bing.com/th/id/OGC.13e53cea17eefe002717e2df7fce8edb?pid=1.7&rurl=https%3a%2f%2fcdn.dribbble.com%2fusers%2f4215307%2fscreenshots%2f9537315%2fsmile_unilever_preloader_800x600.gif&ehk=3oUL2Ju6WdG7GUr0957Ep9BlkUK7l5FtDXt%2bD0i2lfc%3d\" alt=\"HCLTech\" width=\"150\" height=\"140\">"
+                  },
+                  "customWidth": "15",
+                  "name": "text - 5",
+                  "styleSettings": {
+                    "margin": "15",
+                    "padding": "15",
+                    "maxWidth": "15"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "<h1> TAGS Check </h1>\r\n<h2>(Virtual Machine/ DISK/ ResourceGroups/ Network Interfaces/ Load Balancer/ Application Gateway/ Storage accounts/ Virtual machine scale sets)</h2>\r\n"
+                  },
+                  "customWidth": "75",
+                  "name": "text - 4",
+                  "styleSettings": {
+                    "margin": "75",
+                    "padding": "75",
+                    "maxWidth": "75"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "<img src=\"https://media.tenor.com/fUaP_-QE9DUAAAAM/hcl.gif\" alt=\"HCLTech\" width=\"300\" height=\"50\">"
+                  },
+                  "customWidth": "10",
+                  "name": "text - 5 - Copy",
+                  "styleSettings": {
+                    "margin": "10",
+                    "padding": "10",
+                    "maxWidth": "10"
+                  }
+                }
+              ]
+            },
+            "name": "group - 9",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "loadType": "explicit",
+              "loadButtonText": "Click the link and Select the Resources ",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": ""
+                  },
+                  "customWidth": "10",
+                  "name": "text - 5",
+                  "styleSettings": {
+                    "margin": "10",
+                    "padding": "10",
+                    "maxWidth": "10"
+                  }
+                },
+                {
+                  "type": 11,
+                  "content": {
+                    "version": "LinkItem/1.0",
+                    "style": "tabs",
+                    "links": [
+                      {
+                        "id": "cdc13b13-89d5-418e-9d7d-29f4d28fb95a",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Virtual Machines Tags",
+                        "subTarget": "Virtual Machines Tags",
+                        "preText": "",
+                        "style": "link"
+                      },
+                      {
+                        "id": "1ad6b02f-d305-4b29-96ca-59d50a6bdd92",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "DISK Tags",
+                        "subTarget": "DISK Tags",
+                        "preText": "",
+                        "style": "link"
+                      },
+                      {
+                        "id": "d493da7e-c1b6-4d8c-9cdc-527f923cb88b",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Resource Groups Tags",
+                        "subTarget": "Resource Groups Tags",
+                        "preText": "",
+                        "style": "link"
+                      },
+                      {
+                        "id": "bb3359c1-fcf3-4192-b75c-6b1227ed228f",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Network Interfaces Tags",
+                        "subTarget": "Network Interfaces Tags",
+                        "preText": "",
+                        "style": "link"
+                      },
+                      {
+                        "id": "1d3175bf-7036-4c48-bce0-b5809f72df3d",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Load Balancer Tags",
+                        "subTarget": "Load Balancer Tags",
+                        "style": "link"
+                      },
+                      {
+                        "id": "f425616c-fb21-4c2f-b438-4cc30e131cdf",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Application Gateway Tags",
+                        "subTarget": "Application Gateway Tags",
+                        "style": "link"
+                      },
+                      {
+                        "id": "7f4db3a5-99ef-449a-9f5f-1940b1210dd4",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Storage accounts Tags",
+                        "subTarget": "Storage accounts Tags",
+                        "style": "link"
+                      },
+                      {
+                        "id": "63c462e6-09c1-442b-a2c8-3fd73d6ee4dc",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Virtual machine scale sets Tags",
+                        "subTarget": "Virtual machine scale sets Tags",
+                        "style": "link"
+                      }
+                    ]
+                  },
+                  "customWidth": "90",
+                  "name": "links - 0",
+                  "styleSettings": {
+                    "margin": "90",
+                    "padding": "90",
+                    "maxWidth": "90"
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Virtual Machines - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Virtual Machines - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchVM",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "bnlnwpw200057"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️VM_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachines\"\r\n| where name in~ (split(\"{SearchVM}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachines\"\r\n| where name in~ (split(\"{SearchVM}\", ' '))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend vmsize = tostring(properties.hardwareProfile.vmSize)\r\n| extend BAU = tostring(tags.BAU)\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend Icc=tostring(tags.Icc)\r\n| extend OptInOptOut=tostring(tags.OptInOptOut)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend License=tostring(tags.License)\r\n| extend ProductVersion=tostring(tags.ProductVersion)\r\n| extend Workload=tostring(tags.Workload)\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend AssetTag=tostring(tags.AssetTag) \r\n| extend LegalEntity=tostring(tags.LegalEntity)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name,location, PowerState, BAU, VmId=id, OS_Type, OS_Name, resourceGroupName, subscriptionId, ServiceName, Environment,Workload, ITSG,Icc,OptInOptOut,Platform, vmsize,License,ProductVersion,AssetTag,LegalEntity,CostCentre\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| project VMname,location, PowerState,BAU,ServiceName,Platform, Environment,Workload,ITSG, Icc,OptInOptOut,subscriptionName,resourceGroupName,OS_Type,OS_Name,vmsize,License,ProductVersion,AssetTag,LegalEntity,CostCentre\r\n| join kind=leftouter (\r\nresources\r\n| where type == \"microsoft.network/networkinterfaces\"\r\n| extend Server=tostring(split(properties.virtualMachine.id, \"/\")[-1])\r\n| extend privateIPAddress=tostring(properties.ipConfigurations[0].properties.privateIPAddress)\r\n| extend subnetid=tostring(properties.ipConfigurations[0].properties.subnet.id)\r\n| extend vnet= tostring(split(subnetid, \"/\")[8])\r\n| extend subnet= tostring(split(subnetid, \"/\")[10])\r\n| extend [\"Virtual network/subnet\"] = strcat(vnet,\"/\",subnet)\r\n| project Server, privateIPAddress, [\"Virtual network/subnet\"]) on $left.VMname==$right.Server\r\n| join kind=fullouter(\r\nresources\r\n| where type == \"microsoft.compute/disks\"\r\n| where name contains \"OSDisk\"\r\n| extend Server=tostring(split(managedBy, \"/\")[8])\r\n| where Server in (split(\"{SearchVM}\", ' '))\r\n| extend DiskNumber = tostring(split(name, \"-\")[1])\r\n| extend diskSizeGB=toint(properties.diskSizeGB)\r\n| extend [\"diskName/diskSizeGB\"] = tostring(strcat(Server,\"-\",DiskNumber,\"-\",diskSizeGB,\" GB\"))\r\n| order by [\"diskName/diskSizeGB\"] desc\r\n| summarize OSDisk=makeset([\"diskName/diskSizeGB\"]) by Server) on $left.VMname==$right.Server\r\n| project-away Server, Server1",
+                          "size": 0,
+                          "title": "OA Check",
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true,
+                            "sortBy": [
+                              {
+                                "itemKey": "VMname",
+                                "sortOrder": 1
+                              }
+                            ]
+                          },
+                          "sortBy": [
+                            {
+                              "itemKey": "VMname",
+                              "sortOrder": 1
+                            }
+                          ]
+                        },
+                        "conditionalVisibility": {
+                          "parameterName": "1",
+                          "comparison": "isEqualTo",
+                          "value": "1"
+                        },
+                        "name": "OA Check",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| where name !contains \"OSDisk\"\r\n| extend Server=tostring(split(managedBy, \"/\")[8])\r\n| where Server in (split(\"{SearchVM}\", ' '))\r\n| extend DiskNumber = tostring(split(name, \"-\")[1])\r\n| extend diskSizeGB=toint(properties.diskSizeGB)\r\n| extend [\"diskName/diskSizeGB\"] = tostring(strcat(Server,\"-\",DiskNumber,\"-\",diskSizeGB,\" GB\"))\r\n| order by [\"diskName/diskSizeGB\"] desc\r\n| summarize DataDisk=makeset([\"diskName/diskSizeGB\"]) by Server",
+                          "size": 0,
+                          "title": "OA Check",
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          }
+                        },
+                        "conditionalVisibility": {
+                          "parameterName": "1",
+                          "comparison": "isEqualTo",
+                          "value": "1"
+                        },
+                        "name": "OA Check - Copy",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\",\"mergeType\":\"leftouter\",\"leftTable\":\"OA Check\",\"rightTable\":\"OA Check - Copy\",\"leftColumn\":\"VMname\",\"rightColumn\":\"Server\"}],\"projectRename\":[{\"originalName\":\"[OA Check].VMname\",\"mergedName\":\"VMname\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].location\",\"mergedName\":\"location\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].PowerState\",\"mergedName\":\"PowerState\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].BAU\",\"mergedName\":\"BAU\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].ServiceName\",\"mergedName\":\"ServiceName\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].Platform\",\"mergedName\":\"Platform\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].Environment\",\"mergedName\":\"Environment\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].Workload\",\"mergedName\":\"Workload\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].ITSG\",\"mergedName\":\"ITSG\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].Icc\",\"mergedName\":\"Icc\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].OptInOptOut\",\"mergedName\":\"OptInOptOut\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].subscriptionName\",\"mergedName\":\"subscriptionName\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].resourceGroupName\",\"mergedName\":\"resourceGroupName\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].OS_Type\",\"mergedName\":\"OS_Type\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].OS_Name\",\"mergedName\":\"OS_Name\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].vmsize\",\"mergedName\":\"vmsize\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].License\",\"mergedName\":\"License\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].ProductVersion\",\"mergedName\":\"ProductVersion\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].privateIPAddress\",\"mergedName\":\"privateIPAddress\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].Virtual network/subnet\",\"mergedName\":\"Virtual network/subnet\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check].AssetTag\",\"mergedName\":\"AssetTag\",\"fromId\":\"unknown\"},{\"originalName\":\"[OA Check].LegalEntity\",\"mergedName\":\"LegalEntity\",\"fromId\":\"unknown\"},{\"originalName\":\"[OA Check].OSDisk\",\"mergedName\":\"OSDisk\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check - Copy].DataDisk\",\"mergedName\":\"DataDisk\",\"fromId\":\"a5dbef03-6b7e-4467-9137-5e61fa65b037\"},{\"originalName\":\"[OA Check - Copy].Server\"}]}",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 7,
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          }
+                        },
+                        "name": "OA Check",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Virtual Machines Tags"
+                  },
+                  "name": "VM - OA Check",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "DISK - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## DISK - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchDISK",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "bnlsppsx00413"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️DISK_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| extend VM = tostring(split(name, \"-\")[0])\r\n| where VM in~ (split(\"{SearchDISK}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.compute/disks\"\r\n| extend VM = tostring(split(name, \"-\")[0])\r\n| where VM in~ (split(\"{SearchDISK}\", ' '))\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend Country_Code=tostring(tags.[\"Country Code\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Icc=tostring(tags.Icc)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend License=tostring(tags.License)\r\n| extend Name=tostring(tags.Name)\r\n| extend OptInOptOut=tostring(tags.OptInOptOut)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend Project_Name = tostring(tags[\"Project Name\"])\r\n| extend ServerType = tostring(tags.ServerType)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend To_Company_Code = tostring(tags[\"Server Type\"])\r\n| extend Workload=tostring(tags.Workload)\r\n| project VM,Name, resourceGroup, CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name\r\n| sort by VM asc, Name desc\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| project resourceGroup, subscriptionId\r\n)on resourceGroup\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, subscriptionName = name) on subscriptionId\r\n| project-away subscriptionId, subscriptionId1, resourceGroup1\r\n| project VM,Name, subscriptionName ,resourceGroup, CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true,
+                            "sortBy": [
+                              {
+                                "itemKey": "Name",
+                                "sortOrder": 1
+                              }
+                            ]
+                          },
+                          "sortBy": [
+                            {
+                              "itemKey": "Name",
+                              "sortOrder": 1
+                            }
+                          ]
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "DISK Tags"
+                  },
+                  "name": "DISK Tags - OA Check",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Resource Groups - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Resource Groups - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchRG",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "BNLWE-SP01-D-57525-RG"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️RG_Count🔚",
+                              "type": 1,
+                              "query": "resourcecontainers\r\n| where type =~ \"microsoft.resources/subscriptions/resourcegroups\"\r\n| where name in~  (split(\"{SearchRG}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resourcecontainers\r\n| where type =~ \"microsoft.resources/subscriptions/resourcegroups\"\r\n| where name in~  (split(\"{SearchRG}\", ' '))\r\n| extend Environment=tostring(tags.Environment)\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend Workload=tostring(tags.Workload)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend Icc=tostring(tags.Icc)\r\n| project ResourceGroup_Name=name,subscriptionId, Environment,CostCentre,Platform,ServiceName,Workload,ITSG,Icc\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, subscriptionName = name) on subscriptionId\r\n| project-away subscriptionId\r\n| project ResourceGroup_Name,subscriptionName, Environment,CostCentre,Platform,ServiceName,Workload,ITSG,Icc\r\n",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          }
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Resource Groups Tags"
+                  },
+                  "name": "Resource Groups Tags - OA Check",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Network Interfaces - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Network Interfaces - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchNIC",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "bienwpw200021 bienwpw200022 bienwpw200023 bienwpw200024 bienwpw200025 bienwpw200026 bienwpw200027 bienwpw200029 bienwpw200030 bienwpw200031 bienwpw200032 bienwpw200033 bienwpw200034 bienwpw200035 bienwpw200036 bienwpw200037 bienwpw200039 bienwpw200041 bienwpw200042 bnlnwpw200033 bnlnwpw200034 bnlnwpw200035 bnlnwpw200036 bnlnwpw200037 bnlnwpw200038 bnlnwpw200039 bnlnwpw200045 bnlnwpw200046 bnlnwpw200047 bnlnwpw200048 bnlnwpw200049 bnlnwpw200050 bnlnwpw200051 bnlnwpw200052 bnlnwpw200053 bnlnwpw200055 bnlnwpw200056 bnlnwpw200057"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️NIC_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.network/networkinterfaces\"\r\n| extend Server=tostring(split(name, \"-\")[0])\r\n| where Server in~ (split(\"{SearchNIC}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/networkinterfaces\"\r\n| extend Server=tostring(split(name, \"-\")[0])\r\n| where Server in~ (split(\"{SearchNIC}\", ' '))\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend Country_Code=tostring(tags.[\"Country Code\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Icc=tostring(tags.Icc)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend License=tostring(tags.License)\r\n| extend Name=tostring(tags.Name)\r\n| extend OptInOptOut=tostring(tags.OptInOptOut)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend Project_Name = tostring(tags[\"Project Name\"]) \r\n| extend ProjectName = tostring(tags.ProjectName)\r\n| extend ServerType = tostring(tags.ServerType)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend To_Company_Code = tostring(tags[\"Server Type\"])\r\n| extend Workload=tostring(tags.Workload)\r\n| project Server,Name,resourceGroup, CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,ProjectName,Project_Name\r\n| sort by Server asc \r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| project resourceGroup, subscriptionId\r\n)on resourceGroup\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, subscriptionName = name\r\n) on subscriptionId\r\n| join kind=leftouter (\r\nresources\r\n| where type =~ \"microsoft.network/networksecuritygroups\"\r\n| project NSG_NAME = name, resourceGroup, subscriptionId\r\n)on resourceGroup\r\n| project-away subscriptionId, subscriptionId1, resourceGroup1\r\n| project Server,Name,NSG_NAME,subscriptionName ,resourceGroup, CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,ProjectName,Project_Name",
+                          "size": 0,
+                          "title": "Network Interfaces Tags",
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          }
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Network Interfaces Tags"
+                  },
+                  "name": "group - 5",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Load Balancer- Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Load Balancer - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchLB",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "ah1p001a-lb ah1p002a-lb bieno-da01-p-903276-lb01 bieno-da01-p-903276-lb02"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️LB_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.network/loadbalancers\"\r\n| where name in~ (split(\"{SearchLB}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/loadbalancers\"\r\n| where name in~ (split(\"{SearchLB}\", ' '))\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend Country_Code=tostring(tags.[\"Country Code\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Icc=tostring(tags.Icc)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend License=tostring(tags.License)\r\n| extend Name=tostring(tags.Name)\r\n| extend OptInOptOut=tostring(tags.OptInOptOut)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend Project_Name = tostring(tags[\"Project Name\"])\r\n| extend ServerType = tostring(tags.ServerType)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend To_Company_Code = tostring(tags[\"Server Type\"])\r\n| extend Workload=tostring(tags.Workload)\r\n| extend BAU=tostring(tags.BAU)\r\n| project LB_Name=name,resourceGroup, CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name,BAU\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| project resourceGroup, subscriptionId\r\n)on resourceGroup\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, subscriptionName = name) on subscriptionId\r\n| project-away subscriptionId, subscriptionId1, resourceGroup1\r\n| project LB_Name,subscriptionName,resourceGroup, CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name,BAU\r\n\r\n",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          },
+                          "sortBy": []
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Load Balancer Tags"
+                  },
+                  "name": "Load BalancerTags - OA Check - Copy",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Application Gateway - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Application Gateway - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchAG",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "bnlwe-da01-p-904021-appgw-01"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️AG_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.network/applicationgateways\"\r\n| where name in~ (split(\"{SearchAG}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.network/applicationgateways\"\r\n| where name in~ (split(\"{SearchAG}\", ' '))\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend Country_Code=tostring(tags.[\"Country Code\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Icc=tostring(tags.Icc)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend License=tostring(tags.License)\r\n| extend Name=tostring(tags.Name)\r\n| extend OptInOptOut=tostring(tags.OptInOptOut)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend Project_Name = tostring(tags[\"Project Name\"])\r\n| extend ServerType = tostring(tags.ServerType)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend To_Company_Code = tostring(tags[\"Server Type\"])\r\n| extend Workload=tostring(tags.Workload)\r\n| extend BAU=tostring(tags.BAU)\r\n| extend ITServiceName=tostring(tags.ITServiceName)\r\n| project AG_Name=name,resourceGroup,CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name, ITServiceName, BAU\r\n| project AG_Name,resourceGroup,CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name, ITServiceName, BAU\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| project resourceGroup, subscriptionId\r\n)on resourceGroup\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, subscriptionName = name) on subscriptionId\r\n| project-away subscriptionId, subscriptionId1, resourceGroup1\r\n| project AG_Name,subscriptionName ,resourceGroup,CostCentre,Country_Code,Environment,Icc,ITSG,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name, ITServiceName, BAU",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          },
+                          "sortBy": []
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Application Gateway Tags"
+                  },
+                  "name": "Application Gateway Tagss - OA Check - Copy - Copy",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Storage accounts - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Storage accounts - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchSA",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "bnlwestgunileverfi01019"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️SA_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.storage/storageaccounts\"\r\n| where name in~ (split(\"{SearchSA}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.storage/storageaccounts\"\r\n| where name in~ (split(\"{SearchSA}\", ' '))\r\n| extend CostCentre=tostring(tags.CostCentre)\r\n| extend LegalEntity=tostring(tags.LegalEntity)\r\n| extend DeliveryDirector=tostring(tags.DeliveryDirector)\r\n| extend Country_Code=tostring(tags.[\"Country Code\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Icc=tostring(tags.Icc)\r\n| extend ITSG=tostring(tags.ITSG)\r\n| extend AssetTag=tostring(tags.AssetTag)\r\n| extend AssetTag_Space=tostring(tags.[\"AssetTag \"])\r\n| extend License=tostring(tags.License)\r\n| extend Name=tostring(tags.Name)\r\n| extend OptInOptOut=tostring(tags.OptInOptOut)\r\n| extend Platform=tostring(tags.Platform)\r\n| extend Project_Name = tostring(tags[\"Project Name\"])\r\n| extend ServerType = tostring(tags.ServerType)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend To_Company_Code = tostring(tags[\"Server Type\"])\r\n| extend Workload=tostring(tags.Workload)\r\n| extend BAU=tostring(tags.BAU)\r\n| extend ProvisionedBy=tostring(tags.ProvisionedBy)\r\n| extend ProvisionedOn=tostring(tags.ProvisionedOn)\r\n| project SA_Name=name,resourceGroup, location,kind, CostCentre,DeliveryDirector,LegalEntity,Country_Code,Environment,Icc,ITSG,AssetTag,AssetTag_Space,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name,ProvisionedBy, ProvisionedOn, BAU\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| project resourceGroup, subscriptionId\r\n)on resourceGroup\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, subscriptionName = name) on subscriptionId\r\n| project-away subscriptionId, subscriptionId1, resourceGroup1\r\n| project SA_Name,subscriptionName ,resourceGroup,location, kind, CostCentre,DeliveryDirector,LegalEntity,Country_Code,Environment,Icc,ITSG,AssetTag,AssetTag_Space,License,OptInOptOut,Platform,ServerType,Server_Type,ServiceName,SID,To_Company_Code,Workload,Project_Name,ProvisionedBy, ProvisionedOn, BAU\r\n",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true,
+                            "sortBy": [
+                              {
+                                "itemKey": "AssetTag_Space",
+                                "sortOrder": 1
+                              }
+                            ]
+                          },
+                          "sortBy": [
+                            {
+                              "itemKey": "AssetTag_Space",
+                              "sortOrder": 1
+                            }
+                          ]
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Storage accounts Tags"
+                  },
+                  "name": "Storage accounts Tags - OA Check - Copy - Copy - Copy",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Virtual machine scale sets - Tags Check",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Virtual machine scale sets - Tags Check",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "includeAll": true,
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": [
+                                "value::all"
+                              ]
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchVM_Scale_Set",
+                              "label": "search 🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "aks-agentpool-38383604-vmss aks-agentpool-65298516-vmss"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "80",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "80",
+                          "padding": "80",
+                          "maxWidth": "80"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️VM_Scale_Set_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachinescalesets\"\r\n| where name in~ (split(\"{SearchVM_Scale_Set}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "10",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "10",
+                          "padding": "10",
+                          "maxWidth": "10"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachinescalesets\"\r\n| where name in~ (split(\"{SearchVM_Scale_Set}\", ' '))\r\n| project VM_Scale_Sets=name, VM_Scale_Sets_Id=id,  resourceGroup, subscriptionId\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| project VM_Scale_Sets, VM_Scale_Sets_Id, resourceGroup, subscriptionName",
+                          "size": 0,
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          },
+                          "sortBy": []
+                        },
+                        "name": "query - 0",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Virtual machine scale sets Tags"
+                  },
+                  "name": "Virtual machine scale sets Tags",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                }
+              ]
+            },
+            "name": "group - 6"
+          }
+        ]
+      },
+      "name": "OA"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
