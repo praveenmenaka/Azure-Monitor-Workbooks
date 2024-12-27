@@ -1,0 +1,19 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"}],\"method\":\"GET\",\"path\":\"/subscriptions/b466d563-74e6-4232-a5c6-f39f65f6f1fc/resourceGroups/bieno-fs01-p-903637-is01-rg/providers/Microsoft.Compute/virtualMachines/biefsplx00010/instanceView\",\"urlParams\":[{\"key\":\"https://management.azure.com/subscriptions/b466d563-74e6-4232-a5c6-f39f65f6f1fc/resourceGroups/bieno-fs01-p-903637-is01-rg/providers/Microsoft.Compute/virtualMachines\",\"value\":\"https://management.azure.com/subscriptions/b466d563-74e6-4232-a5c6-f39f65f6f1fc/resourceGroups/bieno-fs01-p-903637-is01-rg/providers/Microsoft.Compute/virtualMachines\"},{\"key\":\"api-version\",\"value\":\"2023-07-01\"}],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"\",\"columns\":[{\"path\":\"$.computerName\",\"columnid\":\"computerName\"},{\"path\":\"$.vmAgent.statuses[0].displayStatus\",\"columnid\":\"vmAgent\"},{\"path\":\"$.vmAgent.statuses[0].message\",\"columnid\":\"message\"}]}}]}",
+        "size": 0,
+        "queryType": 12
+      },
+      "name": "query - 0"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
