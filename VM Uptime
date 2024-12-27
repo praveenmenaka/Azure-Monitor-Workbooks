@@ -1,0 +1,705 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+        ],
+        "parameters": [
+          {
+            "id": "dd14cfe4-59e2-4205-b318-ebf8f56768b0",
+            "version": "KqlParameterItem/1.0",
+            "name": "today",
+            "type": 1,
+            "query": "print now()\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions"
+          },
+          {
+            "id": "5513ab63-7f73-4cf0-b9a7-fd91337f7001",
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday",
+            "type": 1,
+            "query": "print now(-1d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions"
+          },
+          {
+            "id": "156123ac-b155-48e6-91fc-120896cebff8",
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_one",
+            "type": 1,
+            "query": "print now(-2d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_two",
+            "type": 1,
+            "query": "print now(-3d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "cde85e56-8f14-4f40-be2c-8b011c2b5ecd"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_three",
+            "type": 1,
+            "query": "print now(-4d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "6d97632b-134c-4c55-8efc-25ed13bf06dc"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_four",
+            "type": 1,
+            "query": "print now(-5d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "c5d0f2c3-021a-4554-a1b3-7441e7235470"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_five",
+            "type": 1,
+            "query": "print now(-6d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "2b772d35-51aa-416d-ab4e-111b8414bc46"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_six",
+            "type": 1,
+            "query": "print now(-7d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "d674028e-5fba-4c3c-be26-ba0df541b142"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_seven",
+            "type": 1,
+            "query": "print now(-8d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "9823de2f-b821-4537-80bc-f23af1f8c88b"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_eight",
+            "type": 1,
+            "query": "print now(-9d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "6b49b02d-2e6b-4ce9-8a5b-0cfdaaab3299"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_nine",
+            "type": 1,
+            "query": "print now(-10d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "01515734-d5c6-48e6-994b-f655172d8802"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_ten",
+            "type": 1,
+            "query": "print now(-11d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "f4428496-7e80-43cd-a341-503076ab947c"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_eleven",
+            "type": 1,
+            "query": "print now(-12d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "90788938-ed40-4bde-8554-b88bf4ace242"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twelve",
+            "type": 1,
+            "query": "print now(-13d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "45c75e8b-7ef6-4bca-a75b-bdb35b2fb886"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_thirteen",
+            "type": 1,
+            "query": "print now(-14d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "2145e08f-4056-455e-b3ed-585157a1bdb8"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_fourteen",
+            "type": 1,
+            "query": "print now(-15d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "8c3e547c-f2bf-4edd-b45c-1f63d38ac00a"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_fifteen",
+            "type": 1,
+            "query": "print now(-16d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "544c4853-b80f-444a-9be5-1092f4492698"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_sixteen",
+            "type": 1,
+            "query": "print now(-17d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "43c7bc70-0a67-4d9e-b518-9c51181a95fe"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_seventeen",
+            "type": 1,
+            "query": "print now(-18d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "3cdb53a0-439c-43a6-af7c-3e5960203ee9"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_eighteen",
+            "type": 1,
+            "query": "print now(-19d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "fe17a063-ace2-4e62-8a70-fc957ffd983a"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_nineteen",
+            "type": 1,
+            "query": "print now(-20d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "2840c0ed-bab0-4c4e-878a-192d5eb3acff"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twenty",
+            "type": 1,
+            "query": "print now(-21d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "b6d3e1ad-930a-4b45-b6b5-110bb6625f19"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentyone",
+            "type": 1,
+            "query": "print now(-22d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "c8f4b0e3-1692-4618-9ca7-13f1dcc7cc22"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentytwo",
+            "type": 1,
+            "query": "print now(-23d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "79a183b2-47f5-41a5-8797-d3480df4cae6"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentythree",
+            "type": 1,
+            "query": "print now(-24d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "7a3e194e-8929-4674-a524-35edec9b7826"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentyfour",
+            "type": 1,
+            "query": "print now(-25d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "3a3a3361-7b62-4bc2-adcd-b7c556c7d743"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentyfive",
+            "type": 1,
+            "query": "print now(-26d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "c91d2d1d-97fc-49f9-ae3d-18c0971b4287"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentysix",
+            "type": 1,
+            "query": "print now(-27d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "d339c566-cc41-48c1-9c11-14fba4d59fd6"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentyseven",
+            "type": 1,
+            "query": "print now(-28d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "2c97e60e-aff0-4a7f-9f77-fa4431225f30"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentyeight",
+            "type": 1,
+            "query": "print now(-29d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "222beb49-979b-4b4c-bbec-b4eb845cb63a"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_twentynine",
+            "type": 1,
+            "query": "print now(-30d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "ee5ef9a2-58c8-4cc4-ad97-29fcc138a001"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "yesterday_plus_thirty",
+            "type": 1,
+            "query": "print now(-31d)\r\n| extend test = tostring(split(print_0, \"T\")[0])\r\n| project test",
+            "crossComponentResources": [
+              "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+            ],
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions",
+            "id": "2fe30ba6-fa9b-4244-a7c0-99755893ebc7"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resources/subscriptions"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subsccription}"
+        ],
+        "parameters": [
+          {
+            "id": "852c1079-20ea-46c9-a079-f940100fd093",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subsccription",
+            "type": 6,
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc"
+          },
+          {
+            "id": "c25ded22-b882-4647-9247-d3a1cafb3d3a",
+            "version": "KqlParameterItem/1.0",
+            "name": "VMCount",
+            "label": "VM Count",
+            "type": 1,
+            "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| summarize count() by subscriptionId\r\n| project count_",
+            "crossComponentResources": [
+              "{Subsccription}"
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "e6d0a66c-028f-4f84-9fd7-8f3c6b85d0bc",
+            "version": "KqlParameterItem/1.0",
+            "name": "BAUCount",
+            "label": "BAU Count",
+            "type": 1,
+            "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend BAU = tostring(tags.BAU)\r\n|where BAU == \"Yes\"\r\n| summarize count() by BAU\r\n| project count_",
+            "crossComponentResources": [
+              "{Subsccription}"
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 2"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "/subscriptions/61f1b943-e15f-42a1-b3e4-a098cb2826e1"
+        ],
+        "parameters": [
+          {
+            "id": "60c5664d-a68d-41b4-9c13-c79bd7c6de19",
+            "version": "KqlParameterItem/1.0",
+            "name": "Dates",
+            "type": 1,
+            "query": "range Days from now() to ago(30d) step -1d\r\n| project Days =tostring(split(Days, \"T\")[0])\r\n| extend test = tostring(strcat(\"1\"))\r\n| summarize Days = makeset(Days) by test\r\n| extend Days = tostring(Days)\r\n| extend replaced=replace_string(Days, '[', '')\r\n| extend final=replace_string(replaced, ']', '')\r\n| project quotes_removed=replace_string(final, '\"', '')",
+            "crossComponentResources": [
+              "/subscriptions/61f1b943-e15f-42a1-b3e4-a098cb2826e1"
+            ],
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 1800000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resources/subscriptions"
+      },
+      "name": "parameters - 4"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Heartbeat\r\n| extend TimeGenerated = todatetime(TimeGenerated)\r\n| extend Day = tostring(format_datetime(TimeGenerated, 'dd'))\r\n| extend Month = tostring(format_datetime(TimeGenerated, 'MM'))\r\n| extend Year = tostring(format_datetime(TimeGenerated, 'yyyy'))\r\n| extend Date = tostring(format_datetime(TimeGenerated, 'yyyy-MM-dd'))\r\n| extend Hour = tostring(format_datetime(TimeGenerated, 'HH'))\r\n| extend Minute = tostring(format_datetime(TimeGenerated, 'mm'))\r\n| extend Second = tostring(format_datetime(TimeGenerated, 'ss'))\r\n| extend Time = tostring(format_datetime(TimeGenerated, 'HH:mm:ss'))\r\n//| summarize VMuptimeinMins=count() by Computer, Day, Month, Year, Date\r\n//| project Computer, VMuptimeinMins, Day, Month, Year, Date\r\n| extend ['{today}'] = case(Date == \"{today}\", \"yes\", \"no\")\r\n| extend ['{yesterday}'] = case(Date == \"{yesterday}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_one}'] = case(Date == \"{yesterday_plus_one}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_two}'] = case(Date == \"{yesterday_plus_two}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_three}'] = case(Date == \"{yesterday_plus_three}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_four}'] = case(Date == \"{yesterday_plus_four}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_five}'] = case(Date == \"{yesterday_plus_five}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_six}'] = case(Date == \"{yesterday_plus_six}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_seven}'] = case(Date == \"{yesterday_plus_seven}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_eight}'] = case(Date == \"{yesterday_plus_eight}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_nine}'] = case(Date == \"{yesterday_plus_nine}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_ten}'] = case(Date == \"{yesterday_plus_ten}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_eleven}'] = case(Date == \"{yesterday_plus_eleven}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twelve}'] = case(Date == \"{yesterday_plus_twelve}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_thirteen}'] = case(Date == \"{yesterday_plus_thirteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_fourteen}'] = case(Date == \"{yesterday_plus_fourteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_fifteen}'] = case(Date == \"{yesterday_plus_fifteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_sixteen}'] = case(Date == \"{yesterday_plus_sixteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_seventeen}'] = case(Date == \"{yesterday_plus_seventeen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_eighteen}'] = case(Date == \"{yesterday_plus_eighteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_nineteen}'] = case(Date == \"{yesterday_plus_nineteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twenty}'] = case(Date == \"{yesterday_plus_twenty}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyone}'] = case(Date == \"{yesterday_plus_twentyone}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentytwo}'] = case(Date == \"{yesterday_plus_twentytwo}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentythree}'] = case(Date == \"{yesterday_plus_twentythree}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyfour}'] = case(Date == \"{yesterday_plus_twentyfour}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyfive}'] = case(Date == \"{yesterday_plus_twentyfive}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentysix}'] = case(Date == \"{yesterday_plus_twentysix}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyseven}'] = case(Date == \"{yesterday_plus_twentyseven}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyeight}'] = case(Date == \"{yesterday_plus_twentyeight}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentynine}'] = case(Date == \"{yesterday_plus_twentynine}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_thirty}'] = case(Date == \"{yesterday_plus_thirty}\", \"yes\", \"no\")\r\n| summarize ['{today}'] = countif(['{today}'] == \"yes\"), \r\n['{yesterday}'] = countif(['{yesterday}'] == \"yes\"), \r\n['{yesterday_plus_one}'] = countif(['{yesterday_plus_one}'] == \"yes\"),\r\n['{yesterday_plus_two}'] = countif(['{yesterday_plus_two}'] == \"yes\"),\r\n['{yesterday_plus_three}'] = countif(['{yesterday_plus_three}'] == \"yes\"),\r\n['{yesterday_plus_four}'] = countif(['{yesterday_plus_four}'] == \"yes\"),\r\n['{yesterday_plus_five}'] = countif(['{yesterday_plus_five}'] == \"yes\"),\r\n['{yesterday_plus_six}'] = countif(['{yesterday_plus_six}'] == \"yes\"),\r\n['{yesterday_plus_seven}'] = countif(['{yesterday_plus_seven}'] == \"yes\"),\r\n['{yesterday_plus_eight}'] = countif(['{yesterday_plus_eight}'] == \"yes\"),\r\n['{yesterday_plus_nine}'] = countif(['{yesterday_plus_nine}'] == \"yes\"),\r\n['{yesterday_plus_ten}'] = countif(['{yesterday_plus_ten}'] == \"yes\"),\r\n['{yesterday_plus_eleven}'] = countif(['{yesterday_plus_eleven}'] == \"yes\"),\r\n['{yesterday_plus_twelve}'] = countif(['{yesterday_plus_twelve}'] == \"yes\"),\r\n['{yesterday_plus_thirteen}'] = countif(['{yesterday_plus_thirteen}'] == \"yes\"),\r\n['{yesterday_plus_fourteen}'] = countif(['{yesterday_plus_fourteen}'] == \"yes\"),\r\n['{yesterday_plus_fifteen}'] = countif(['{yesterday_plus_fifteen}'] == \"yes\"),\r\n['{yesterday_plus_sixteen}'] = countif(['{yesterday_plus_sixteen}'] == \"yes\"),\r\n['{yesterday_plus_seventeen}'] = countif(['{yesterday_plus_seventeen}'] == \"yes\"),\r\n['{yesterday_plus_eighteen}'] = countif(['{yesterday_plus_eighteen}'] == \"yes\"),\r\n['{yesterday_plus_nineteen}'] = countif(['{yesterday_plus_nineteen}'] == \"yes\"),\r\n['{yesterday_plus_twenty}'] = countif(['{yesterday_plus_twenty}'] == \"yes\"),\r\n['{yesterday_plus_twentyone}'] = countif(['{yesterday_plus_twentyone}'] == \"yes\"),\r\n['{yesterday_plus_twentytwo}'] = countif(['{yesterday_plus_twentytwo}'] == \"yes\"),\r\n['{yesterday_plus_twentythree}'] = countif(['{yesterday_plus_twentythree}'] == \"yes\"),\r\n['{yesterday_plus_twentyfour}'] = countif(['{yesterday_plus_twentyfour}'] == \"yes\"),\r\n['{yesterday_plus_twentyfive}'] = countif(['{yesterday_plus_twentyfive}'] == \"yes\"),\r\n['{yesterday_plus_twentysix}'] = countif(['{yesterday_plus_twentysix}'] == \"yes\"),\r\n['{yesterday_plus_twentyseven}'] = countif(['{yesterday_plus_twentyseven}'] == \"yes\"),\r\n['{yesterday_plus_twentyeight}'] = countif(['{yesterday_plus_twentyeight}'] == \"yes\"),\r\n['{yesterday_plus_twentynine}'] = countif(['{yesterday_plus_twentynine}'] == \"yes\"),\r\n['{yesterday_plus_thirty}'] = countif(['{yesterday_plus_thirty}'] == \"yes\") by Computer, Category, TenantId\r\n//| where Date in (\"{today}\", \"{yesterday}\")",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 2592000000
+        },
+        "showExportToExcel": true,
+        "exportToExcelOptions": "all",
+        "queryType": 0,
+        "resourceType": "microsoft.resources/subscriptions",
+        "crossComponentResources": [
+          "{Subsccription}"
+        ],
+        "gridSettings": {
+          "rowLimit": 10000,
+          "filter": true,
+          "sortBy": [
+            {
+              "itemKey": "Computer",
+              "sortOrder": 1
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "Computer",
+            "sortOrder": 1
+          }
+        ]
+      },
+      "name": "query - 1"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subsccription}"
+        ],
+        "parameters": [
+          {
+            "id": "0ebd2869-688e-4020-9b15-9c171c952abc",
+            "version": "KqlParameterItem/1.0",
+            "name": "Count",
+            "type": 1,
+            "query": "Heartbeat\r\n| extend TimeGenerated = todatetime(TimeGenerated)\r\n| extend Day = tostring(format_datetime(TimeGenerated, 'dd'))\r\n| extend Month = tostring(format_datetime(TimeGenerated, 'MM'))\r\n| extend Year = tostring(format_datetime(TimeGenerated, 'yyyy'))\r\n| extend Date = tostring(format_datetime(TimeGenerated, 'yyyy-MM-dd'))\r\n| extend Hour = tostring(format_datetime(TimeGenerated, 'HH'))\r\n| extend Minute = tostring(format_datetime(TimeGenerated, 'mm'))\r\n| extend Second = tostring(format_datetime(TimeGenerated, 'ss'))\r\n| extend Time = tostring(format_datetime(TimeGenerated, 'HH:mm:ss'))\r\n//| summarize VMuptimeinMins=count() by Computer, Day, Month, Year, Date\r\n//| project Computer, VMuptimeinMins, Day, Month, Year, Date\r\n| extend ['{today}'] = case(Date == \"{today}\", \"yes\", \"no\")\r\n| extend ['{yesterday}'] = case(Date == \"{yesterday}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_one}'] = case(Date == \"{yesterday_plus_one}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_two}'] = case(Date == \"{yesterday_plus_two}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_three}'] = case(Date == \"{yesterday_plus_three}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_four}'] = case(Date == \"{yesterday_plus_four}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_five}'] = case(Date == \"{yesterday_plus_five}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_six}'] = case(Date == \"{yesterday_plus_six}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_seven}'] = case(Date == \"{yesterday_plus_seven}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_eight}'] = case(Date == \"{yesterday_plus_eight}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_nine}'] = case(Date == \"{yesterday_plus_nine}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_ten}'] = case(Date == \"{yesterday_plus_ten}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_eleven}'] = case(Date == \"{yesterday_plus_eleven}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twelve}'] = case(Date == \"{yesterday_plus_twelve}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_thirteen}'] = case(Date == \"{yesterday_plus_thirteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_fourteen}'] = case(Date == \"{yesterday_plus_fourteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_fifteen}'] = case(Date == \"{yesterday_plus_fifteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_sixteen}'] = case(Date == \"{yesterday_plus_sixteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_seventeen}'] = case(Date == \"{yesterday_plus_seventeen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_eighteen}'] = case(Date == \"{yesterday_plus_eighteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_nineteen}'] = case(Date == \"{yesterday_plus_nineteen}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twenty}'] = case(Date == \"{yesterday_plus_twenty}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyone}'] = case(Date == \"{yesterday_plus_twentyone}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentytwo}'] = case(Date == \"{yesterday_plus_twentytwo}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentythree}'] = case(Date == \"{yesterday_plus_twentythree}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyfour}'] = case(Date == \"{yesterday_plus_twentyfour}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyfive}'] = case(Date == \"{yesterday_plus_twentyfive}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentysix}'] = case(Date == \"{yesterday_plus_twentysix}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyseven}'] = case(Date == \"{yesterday_plus_twentyseven}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentyeight}'] = case(Date == \"{yesterday_plus_twentyeight}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_twentynine}'] = case(Date == \"{yesterday_plus_twentynine}\", \"yes\", \"no\")\r\n| extend ['{yesterday_plus_thirty}'] = case(Date == \"{yesterday_plus_thirty}\", \"yes\", \"no\")\r\n| summarize ['{today}'] = countif(['{today}'] == \"yes\"), \r\n['{yesterday}'] = countif(['{yesterday}'] == \"yes\"), \r\n['{yesterday_plus_one}'] = countif(['{yesterday_plus_one}'] == \"yes\"),\r\n['{yesterday_plus_two}'] = countif(['{yesterday_plus_two}'] == \"yes\"),\r\n['{yesterday_plus_three}'] = countif(['{yesterday_plus_three}'] == \"yes\"),\r\n['{yesterday_plus_four}'] = countif(['{yesterday_plus_four}'] == \"yes\"),\r\n['{yesterday_plus_five}'] = countif(['{yesterday_plus_five}'] == \"yes\"),\r\n['{yesterday_plus_six}'] = countif(['{yesterday_plus_six}'] == \"yes\"),\r\n['{yesterday_plus_seven}'] = countif(['{yesterday_plus_seven}'] == \"yes\"),\r\n['{yesterday_plus_eight}'] = countif(['{yesterday_plus_eight}'] == \"yes\"),\r\n['{yesterday_plus_nine}'] = countif(['{yesterday_plus_nine}'] == \"yes\"),\r\n['{yesterday_plus_ten}'] = countif(['{yesterday_plus_ten}'] == \"yes\"),\r\n['{yesterday_plus_eleven}'] = countif(['{yesterday_plus_eleven}'] == \"yes\"),\r\n['{yesterday_plus_twelve}'] = countif(['{yesterday_plus_twelve}'] == \"yes\"),\r\n['{yesterday_plus_thirteen}'] = countif(['{yesterday_plus_thirteen}'] == \"yes\"),\r\n['{yesterday_plus_fourteen}'] = countif(['{yesterday_plus_fourteen}'] == \"yes\"),\r\n['{yesterday_plus_fifteen}'] = countif(['{yesterday_plus_fifteen}'] == \"yes\"),\r\n['{yesterday_plus_sixteen}'] = countif(['{yesterday_plus_sixteen}'] == \"yes\"),\r\n['{yesterday_plus_seventeen}'] = countif(['{yesterday_plus_seventeen}'] == \"yes\"),\r\n['{yesterday_plus_eighteen}'] = countif(['{yesterday_plus_eighteen}'] == \"yes\"),\r\n['{yesterday_plus_nineteen}'] = countif(['{yesterday_plus_nineteen}'] == \"yes\"),\r\n['{yesterday_plus_twenty}'] = countif(['{yesterday_plus_twenty}'] == \"yes\"),\r\n['{yesterday_plus_twentyone}'] = countif(['{yesterday_plus_twentyone}'] == \"yes\"),\r\n['{yesterday_plus_twentytwo}'] = countif(['{yesterday_plus_twentytwo}'] == \"yes\"),\r\n['{yesterday_plus_twentythree}'] = countif(['{yesterday_plus_twentythree}'] == \"yes\"),\r\n['{yesterday_plus_twentyfour}'] = countif(['{yesterday_plus_twentyfour}'] == \"yes\"),\r\n['{yesterday_plus_twentyfive}'] = countif(['{yesterday_plus_twentyfive}'] == \"yes\"),\r\n['{yesterday_plus_twentysix}'] = countif(['{yesterday_plus_twentysix}'] == \"yes\"),\r\n['{yesterday_plus_twentyseven}'] = countif(['{yesterday_plus_twentyseven}'] == \"yes\"),\r\n['{yesterday_plus_twentyeight}'] = countif(['{yesterday_plus_twentyeight}'] == \"yes\"),\r\n['{yesterday_plus_twentynine}'] = countif(['{yesterday_plus_twentynine}'] == \"yes\"),\r\n['{yesterday_plus_thirty}'] = countif(['{yesterday_plus_thirty}'] == \"yes\") by Computer, Category\r\n| count",
+            "crossComponentResources": [
+              "{Subsccription}"
+            ],
+            "timeContext": {
+              "durationMs": 2592000000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.resources/subscriptions"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resources/subscriptions"
+      },
+      "name": "parameters - 3"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "ead709e7-7dee-4e7e-a5b4-776062f9116d",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeZone",
+            "type": 2,
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "jsonData": "[\r\n    { \"value\":\"0\", \"label\":\"UTC+0\", \"selected\":true },\r\n    { \"value\":\"5.5\", \"label\":\"UTC+5.30(IST)\", \"selected\":false }\r\n]",
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 6"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let _now = toscalar(now());\r\nlet defaultStopVM = AzureActivity\r\n| where ResourceProvider == \"Microsoft.Compute\"\r\n| where _ResourceId contains \"Microsoft.Compute/virtualMachines\"\r\n| where (indexof(_ResourceId,\"/\",0,-1,9)) == -1\r\n| where TimeGenerated > ago(90d)\r\n| extend TimeGenerated = TimeGenerated + ({TimeZone}*1h), StartedBy = Caller\r\n| distinct _ResourceId\r\n| extend stopTime=_now;\r\nlet startVM=AzureActivity\r\n| where ResourceProvider == \"Microsoft.Compute\"\r\n| where _ResourceId contains \"Microsoft.Compute/virtualMachines\" \r\n| where (indexof(_ResourceId,\"/\",0,-1,9)) == -1\r\n| where OperationName startswith \"start virtual\" \r\n| where ActivityStatusValue == \"Succeeded\"\r\n| extend TimeGenerated = TimeGenerated + ({TimeZone}*1h)\r\n| project startTime=TimeGenerated, Resource, _ResourceId, StartedBy=Caller;\r\nlet stopVM=AzureActivity\r\n| where ResourceProvider == \"Microsoft.Compute\"\r\n| where _ResourceId contains \"Microsoft.Compute/virtualMachines\" \r\n| where (indexof(_ResourceId,\"/\",0,-1,9)) == -1\r\n| where OperationName startswith \"deallocate virtual\" \r\n| where ActivityStatusValue == \"Succeeded\"\r\n| where TimeGenerated > ago(90d)\r\n| extend TimeGenerated = TimeGenerated + ({TimeZone}*1h)\r\n| project stopTime=TimeGenerated, Resource, _ResourceId, StoppedBy=Caller\r\n| union defaultStopVM;\r\nstartVM\r\n| join kind=leftouter (stopVM) on $left._ResourceId == $right._ResourceId\r\n| extend isAfterStart = iff(startTime > stopTime, 0, 1)\r\n| where isAfterStart == 1\r\n| summarize arg_min(stopTime, *) by startTime, Resource\r\n| summarize arg_min(startTime, *) by stopTime, Resource\r\n| order by Resource desc, startTime desc\r\n| project Resource, startTime, stopTime, uptimeMins=datetime_diff('minute',stopTime,startTime), uptimeHours=datetime_diff('hour',stopTime,startTime), notes = iif(stopTime ==_now, \"Currently running\", \"\"), StoppedBy, StartedBy\r\n| extend stopTime = iif(stopTime ==_now, datetime(null), stopTime)",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 2592000000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.resources/subscriptions",
+        "crossComponentResources": [
+          "{Subsccription}"
+        ],
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "query - 5"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
