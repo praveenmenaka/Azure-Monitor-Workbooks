@@ -1,0 +1,2100 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "<img src=\"https://www.unilever.com/core-assets/logos/logo-animated.svg\"  \r\n    alt=\"Norway\"\r\n    style=\"width:70px;height:80px;\"\r\n    >\r\n\r\n"
+            },
+            "customWidth": "20",
+            "name": "text - 16",
+            "styleSettings": {
+              "margin": "20",
+              "padding": "20",
+              "maxWidth": "20"
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": ""
+            },
+            "customWidth": "10",
+            "name": "text - 19",
+            "styleSettings": {
+              "margin": "10",
+              "padding": "10",
+              "maxWidth": "10"
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "# 🔑 SAP Technical Services Report 🔑 \r\n\t\t\t\t\r\n"
+            },
+            "customWidth": "40",
+            "name": "text - 17",
+            "styleSettings": {
+              "margin": "40",
+              "padding": "40",
+              "maxWidth": "40"
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": ""
+            },
+            "customWidth": "10",
+            "name": "text - 19 - Copy",
+            "styleSettings": {
+              "margin": "10",
+              "padding": "10",
+              "maxWidth": "10"
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "<img src=\"https://th.bing.com/th/id/OIP.YJLx7Jy3vMH8_o8QWkxSPwHaHb?pid=ImgDet&rs=1\"  \r\n    alt=\"Norway\"\r\n    style=\"width:70px;height:80px;\"\r\n    >\r\n\r\n"
+            },
+            "customWidth": "20",
+            "name": "text - 16 - Copy",
+            "styleSettings": {
+              "margin": "20",
+              "padding": "20",
+              "maxWidth": "20"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "parameters": [
+                {
+                  "id": "20831d50-059b-4640-b361-cf96c381b967",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Subscriptions",
+                  "type": 6,
+                  "description": "This Parameter is used to List all the Subscriptions",
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where name contains \"SAP\"\r\n| project id",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "f5c0f73d-4a2a-4a0b-bf25-61668470ea43",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "ServiceName",
+                  "type": 2,
+                  "description": "This Parameter is used to filter-out the ServiceNames in the Selected Subscriptions",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| project name, ServiceName\r\n| distinct ServiceName",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "U2K2 (ECC) - AAR"
+                },
+                {
+                  "id": "ef9eee6f-4929-435f-b93f-f1b6add7fd2e",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SID",
+                  "type": 2,
+                  "description": "This Parameter is used to filter-out the SID's based on previous Selections",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where tags.ServiceName == \"{ServiceName}\"\r\n| extend SID=tostring(tags.SID)\r\n| project name, SID\r\n| distinct SID",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "R1P"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "45",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "parameters - 0"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": ""
+            },
+            "customWidth": "10",
+            "name": "text - 13"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "parameters": [
+                {
+                  "id": "72d591d9-b7a6-4508-bfaf-c33d65bb3d1a",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Server_Type",
+                  "type": 2,
+                  "description": "This Parameter is used to filter-out the Server Type's based on previous Selections",
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend VMModel = tostring(properties.hardwareProfile.vmSize)\r\n| project name, id, ServiceName, SID, Server_Type, Environment, ResourceGraphOS, PowerState, VMModel\r\n| where ServiceName == '{ServiceName}' and SID == '{SID}'\r\n| distinct Server_Type",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "DB2 DB HA Server",
+                    "DB2 DB Server"
+                  ]
+                },
+                {
+                  "id": "40f64708-2274-4ce2-80c5-0ce117499c41",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Environment",
+                  "type": 2,
+                  "description": "This Parameter is used to filter-out the Environment's based on previous Selections",
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend VMModel = tostring(properties.hardwareProfile.vmSize)\r\n| project name, id, ServiceName, SID, Server_Type, Environment, ResourceGraphOS, PowerState, VMModel\r\n| where ServiceName == '{ServiceName}' and SID == '{SID}'\r\n| where Server_Type in ({Server_Type})\r\n| distinct Environment",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "DR"
+                  ]
+                },
+                {
+                  "id": "068a7783-9bd0-4593-b8a5-33c490311b5e",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VM",
+                  "type": 2,
+                  "description": "This Parameter is used to list-out the VM's based on previous Selections",
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| where ServiceName == '{ServiceName}' and SID == '{SID}' \r\n| where Server_Type in ({Server_Type}) and Environment in ({Environment})\r\n| project name, id\r\n| distinct name",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "45",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "parameters - 0 - Copy"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "8ebb7cda-a71a-4da7-a682-001cedd36e43",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "type": 4,
+                  "description": "This Parameter is used to set the TimeRange for Utilization Queries",
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "value": {
+                    "durationMs": 7776000000
+                  }
+                }
+              ],
+              "style": "formVertical",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "25",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "parameters - 0 - Copy"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "b368ee84-0378-4371-a218-9b13e0c87500",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Aggregate",
+                  "type": 2,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\r\n\t{\"name\" : \"min\", \"value\" : \"min\" },\r\n\t{\"name\" : \"avg\", \"value\" : \"avg\" },\r\n    {\"name\" : \"max\", \"value\" : \"max\" }\r\n]",
+                  "value": "avg"
+                }
+              ],
+              "style": "formVertical",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "25",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "parameters - 0 - Copy - Copy"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "09263fab-10f9-4961-9838-2bdcfd97e893",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Interval",
+                  "type": 2,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\r\n\t{\"name\" : \"15min\", \"value\" : \"15min\" },\r\n\t{\"name\" : \"1hr\", \"value\" : \"1hr\" },\r\n    {\"name\" : \"1d\", \"value\" : \"1d\" }\r\n]",
+                  "value": "1d"
+                }
+              ],
+              "style": "formVertical",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "25",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "parameters - 0 - Copy - Copy"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "d0017ba8-5b86-4bb0-810f-581b70c57087",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "charttype",
+                  "type": 2,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\r\n\t{\"name\" : \"timechart\", \"value\" : \"timechart\", \"label\" : \"Graph\" },\r\n\t{\"name\" : \"table\", \"value\" : \"table\", \"label\" : \"Excel\"}\r\n]",
+                  "value": "table"
+                }
+              ],
+              "style": "formVertical",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "25",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "parameters - 0 - Copy - Copy - Copy"
+          },
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "9d941220-7031-42a4-8df7-0a8f8d4eeb8d",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "CPU",
+                  "subTarget": "CPU",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "Sev0"
+                },
+                {
+                  "id": "260874a1-6d33-4b39-b2ae-3740f2cfc383",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Memory",
+                  "subTarget": "Memory",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "Sev2"
+                },
+                {
+                  "id": "0dcc9864-52a9-420e-813e-8bc3a39b5b9d",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "DISK IOPS",
+                  "subTarget": "DISK IOPS",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "Sev4"
+                },
+                {
+                  "id": "89239be3-271d-43d3-9db5-84a0d7e15a6d",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "DB2 SAP Data Disk Utilization",
+                  "subTarget": "DB2 SAP Data Disk Utilization",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "Sev4"
+                },
+                {
+                  "id": "27b00c76-20f1-4484-984f-6e942e22f418",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Top 10 CPU Processes",
+                  "subTarget": "Top 10 CPU Processes",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "2"
+                },
+                {
+                  "id": "9ba07506-130c-47b8-afac-ed34f9a527c4",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "CPU/Memory above 85% utilised",
+                  "subTarget": "CPU/Memory above 85% utilised",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "2"
+                },
+                {
+                  "id": "794a6825-7f33-415b-916d-3a0fc4a0c7d8",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Search for VM's",
+                  "subTarget": "Search for VM's",
+                  "postText": "",
+                  "style": "secondary",
+                  "icon": "Search"
+                }
+              ]
+            },
+            "name": "links - 0",
+            "styleSettings": {
+              "margin": "100",
+              "padding": "100",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname in ({VM}) or '*' in ({VM})\r\n| where ObjectName == \"Processor Information\" or ObjectName == \"Processor\"\r\n| where CounterName == \"% Processor Time\"\r\n| summarize CPU_{Aggregate}_Utilization = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}",
+              "size": 0,
+              "aggregation": 3,
+              "title": "CPU Utilization : {TimeRange}",
+              "noDataMessageStyle": 5,
+              "timeContextFromParameter": "TimeRange",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "CPU_max_Utilization",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "colors",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "75",
+                          "representation": "green",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "80",
+                          "representation": "yellow",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": ">=",
+                          "thresholdValue": "80",
+                          "representation": "redBright",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "text": "{0}{1}"
+                        }
+                      ],
+                      "compositeBarSettings": {
+                        "labelText": "",
+                        "columnSettings": []
+                      }
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "CPU_avg_Utilization",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "colors",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "75",
+                          "representation": "green",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "80",
+                          "representation": "yellow",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": ">=",
+                          "thresholdValue": "80",
+                          "representation": "redBright",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "CPU_min_Utilization",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "colors",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "75",
+                          "representation": "green",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "80",
+                          "representation": "yellow",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": ">=",
+                          "thresholdValue": "80",
+                          "representation": "redBright",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Utilization",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "TimeGenerated",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "TimeGenerated",
+                  "sortOrder": 1
+                }
+              ],
+              "chartSettings": {
+                "xAxis": "TimeGenerated",
+                "showLegend": true,
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 1,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "CPU"
+            },
+            "showPin": true,
+            "name": "CPU"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname in ({VM}) or '*' in ({VM})\r\n| where ObjectName == \"Memory\"\r\n| where CounterName == \"% Committed Bytes In Use\" or  CounterName == \"% Used Memory\"\r\n| summarize Mem_{Aggregate}_Utilization = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}\r\n",
+              "size": 0,
+              "aggregation": 3,
+              "title": "Memory Utilization : {TimeRange}",
+              "noDataMessageStyle": 5,
+              "timeContextFromParameter": "TimeRange",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Mem_max_Utilization",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "colors",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "75",
+                          "representation": "green",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "80",
+                          "representation": "yellow",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": ">=",
+                          "thresholdValue": "80",
+                          "representation": "redBright",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Mem_min_Utilization",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "colors",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "75",
+                          "representation": "green",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "80",
+                          "representation": "yellow",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": ">=",
+                          "thresholdValue": "80",
+                          "representation": "redBright",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Mem_avg_Utilization",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "colors",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "75",
+                          "representation": "green",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "<=",
+                          "thresholdValue": "80",
+                          "representation": "yellow",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": ">=",
+                          "thresholdValue": "80",
+                          "representation": "redBright",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Utilization",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "TimeGenerated",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "TimeGenerated",
+                  "sortOrder": 1
+                }
+              ],
+              "chartSettings": {
+                "showLegend": true,
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 1,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Memory"
+            },
+            "showPin": true,
+            "name": "Memory"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname in ({VM}) or '*' in ({VM})\r\n| where ObjectName == \"LogicalDisk\" or ObjectName == \"Logical Disk\"\r\n| where CounterName == \"Disk Transfers/sec\"\r\n| summarize DISK_IOPS_{Aggregate} = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}\r\n",
+              "size": 0,
+              "aggregation": 3,
+              "title": "DISK IOPS : {TimeRange}",
+              "noDataMessageStyle": 5,
+              "timeContextFromParameter": "TimeRange",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              },
+              "chartSettings": {
+                "createOtherGroup": 1000,
+                "showLegend": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "DISK IOPS"
+            },
+            "showPin": true,
+            "name": "DISK IOPS"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname in ({VM}) or '*' in ({VM})\r\n| where (CounterName ==\"% Used Space\") and (InstanceName contains \"sapdata\")\r\n| summarize DISK_Utilization_{Aggregate} = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}",
+              "size": 0,
+              "aggregation": 2,
+              "title": "DB2 SAP Data Disk Utilization",
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "DISK_Utilization_avg",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true
+              },
+              "sortBy": [],
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 1,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "DB2 SAP Data Disk Utilization"
+            },
+            "name": "query - 26"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let filters = Perf \r\n| extend parsedname=tostring(split(Computer, \".\")[0]) | where TimeGenerated > ago(5m) | where Computer in (\"bnlsptw200008.S2.MS.UNILEVER.com\", \"biesptw200001.S2.MS.UNILEVER.com\", \"bnlsptw200001.S2.MS.UNILEVER.com\", \"bnlsptw200006.S2.MS.UNILEVER.com\");\r\nlet ptime = filters | where ObjectName == 'Process' and CounterName == '% Processor Time' | where InstanceName != '_Total' and InstanceName != 'Idle';\r\nlet utime = filters | where ObjectName == 'Process' and CounterName == '% User Time' | where InstanceName != '_Total' and InstanceName != 'Idle';\r\nlet ctime = filters | where ObjectName == 'Processor' and CounterName == '% Processor Time' | where InstanceName == '_Total';\r\nlet cutime = filters | where ObjectName == 'Processor' and CounterName == '% User Time' | where InstanceName == '_Total';\r\nlet ccomps = ctime | summarize CPU=avg(CounterValue) by Computer | project CPU, Name=strcat('💻 ', Computer), Key=Computer, ParentKey='', Computer;\r\nlet ucomps = cutime | summarize UserTime=avg(CounterValue) by Computer | project UserTime, Key=Computer;\r\nlet comps = ccomps | join hint.shufflekey=Key kind=leftouter ucomps on Key | project CPU, Name, Key, ParentKey, Computer, UserTime;\r\nlet pprocs = ptime | summarize CPU=avg(CounterValue) by Computer, InstanceName | project CPU, Name=strcat('🎫 ', InstanceName), ParentKey=Computer, Key=strcat(Computer, '-', InstanceName), Computer, Process=InstanceName;\r\nlet uprocs = utime | summarize UserTime=avg(CounterValue) by Computer, InstanceName | project UserTime, Key=strcat(Computer, '-', InstanceName), Process=InstanceName;\r\nlet procs = pprocs | join hint.shufflekey=Key kind=leftouter uprocs on Key | project CPU, Name, ParentKey, Key, Computer, UserTime, Process;\r\nlet table = comps | union procs;\r\ntable\r\n| project Name, Key, ParentKey, CPU, CPU_user = (UserTime / 100) * CPU, UserTime, Process\r\n| order by CPU desc\r\n| top 10 by CPU",
+              "size": 0,
+              "aggregation": 3,
+              "title": "Top 10 CPU Processes : {TimeRange}",
+              "noDataMessageStyle": 5,
+              "timeContextFromParameter": "TimeRange",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.resources/subscriptions",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "CounterValue",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "CPU",
+                    "sortOrder": 2
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "CPU",
+                  "sortOrder": 2
+                }
+              ],
+              "chartSettings": {
+                "xAxis": "Name",
+                "yAxis": [
+                  "CPU"
+                ],
+                "showLegend": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Top 10 CPU Processes"
+            },
+            "showPin": true,
+            "name": "query - 16"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "Search for #VirtualMachines",
+                    "style": "info"
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Search for VM's"
+                  },
+                  "name": "Search for VM's"
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "parameters": [
+                      {
+                        "id": "9a434ae2-be6c-4694-a66a-453302782e93",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "Subscriptions",
+                        "label": "💡Subscriptions",
+                        "type": 6,
+                        "multiSelect": true,
+                        "quote": "'",
+                        "delimiter": ",",
+                        "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where name contains \"SAP\"\r\n| project id\r\n ",
+                        "crossComponentResources": [
+                          "value::all"
+                        ],
+                        "typeSettings": {
+                          "additionalResourceOptions": [
+                            "value::all"
+                          ],
+                          "showDefault": false
+                        },
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "value": [
+                          "value::all"
+                        ]
+                      }
+                    ],
+                    "style": "formHorizontal",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  "customWidth": "75",
+                  "name": "parameters - 0",
+                  "styleSettings": {
+                    "maxWidth": "75"
+                  }
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "parameters": [
+                      {
+                        "id": "b05af612-f638-4578-a434-ac34d376103b",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "SearchVM",
+                        "label": "Search 🔎",
+                        "type": 1,
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "value": "bnlsptw200001"
+                      }
+                    ],
+                    "style": "formHorizontal",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "customWidth": "25",
+                  "name": "parameters - 1",
+                  "styleSettings": {
+                    "maxWidth": "25"
+                  }
+                },
+                {
+                  "type": 11,
+                  "content": {
+                    "version": "LinkItem/1.0",
+                    "style": "tabs",
+                    "links": [
+                      {
+                        "id": "c164f68a-3341-44a0-80b4-3235df2f3a9d",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "{SearchVM}-VM Details",
+                        "subTarget": "VMDetails",
+                        "preText": "",
+                        "style": "primary",
+                        "linkIsContextBlade": true
+                      },
+                      {
+                        "id": "b3e3dc97-be10-4140-bb51-f694450b8d2b",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "{SearchVM}-CPU",
+                        "subTarget": "CPU_Search",
+                        "preText": "",
+                        "style": "primary",
+                        "icon": "AzurePortal",
+                        "linkIsContextBlade": true
+                      },
+                      {
+                        "id": "89734af8-0fd8-4192-a1d5-e8bddde6891f",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "{SearchVM}-Memory",
+                        "subTarget": "Memory_Search",
+                        "preText": "",
+                        "style": "primary",
+                        "icon": "AzurePortal",
+                        "linkIsContextBlade": true
+                      },
+                      {
+                        "id": "d0b9788d-f769-4959-a2cf-757183ba8e44",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "{SearchVM}-DiskIOPS",
+                        "subTarget": "DiskIOPS_Search",
+                        "preText": "",
+                        "style": "primary",
+                        "icon": "AzurePortal",
+                        "linkIsContextBlade": true
+                      }
+                    ]
+                  },
+                  "name": "links - 2",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "crossComponentResources": [
+                      "{Subscriptions}"
+                    ],
+                    "parameters": [
+                      {
+                        "id": "6856f884-eb9a-40e6-b662-c729bdef5ec0",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "ServiceName_Search",
+                        "label": "ServiceName",
+                        "type": 1,
+                        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| where name == \"{SearchVM}\"\r\n| distinct ServiceName",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources"
+                      },
+                      {
+                        "version": "KqlParameterItem/1.0",
+                        "name": "SID_Search",
+                        "type": 1,
+                        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| where name == \"{SearchVM}\"\r\n| distinct SID",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "id": "20f36e36-893b-4efd-8883-eed9d1a50c8b",
+                        "label": "SID"
+                      },
+                      {
+                        "version": "KqlParameterItem/1.0",
+                        "name": "Server_Type_Search",
+                        "label": "Server Type",
+                        "type": 1,
+                        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| where name == \"{SearchVM}\"\r\n| distinct Server_Type",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "id": "90fcc98f-9d9a-4fe9-9a87-10f931eb310e"
+                      }
+                    ],
+                    "style": "formHorizontal",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  "customWidth": "50",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 3"
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "crossComponentResources": [
+                      "{Subscriptions}"
+                    ],
+                    "parameters": [
+                      {
+                        "version": "KqlParameterItem/1.0",
+                        "name": "Environment_Search",
+                        "type": 1,
+                        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| where name == \"{SearchVM}\"\r\n| distinct Environment",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "id": "963bad7a-3daa-481e-ae69-1d490933c021",
+                        "label": "Environment"
+                      },
+                      {
+                        "version": "KqlParameterItem/1.0",
+                        "name": "OperatingSystem_Search",
+                        "label": "Operating System",
+                        "type": 1,
+                        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| where name == \"{SearchVM}\"\r\n| distinct ResourceGraphOS",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "id": "3963d8e8-532d-4bc5-a1b9-482f0629f353"
+                      },
+                      {
+                        "version": "KqlParameterItem/1.0",
+                        "name": "PowerState_Search",
+                        "label": "Power State",
+                        "type": 1,
+                        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend Environment=tostring(tags.Environment)\r\n| extend OS = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Type= tostring(properties.extended.instanceView.osName)\r\n| extend ResourceGraphOS = strcat(OS, iff(OS_Type == \"\", \"\", strcat(\" (\", OS_Type, \")\")))\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code)\r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| where name == \"{SearchVM}\"\r\n| distinct PowerState",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "id": "3f40ebb0-d9c3-4a8a-9316-436c01d3b2ae"
+                      }
+                    ],
+                    "style": "formHorizontal",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  "customWidth": "50",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 3 - Copy"
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "parameters": [
+                      {
+                        "id": "4e13a556-fe56-4cf5-928b-3dca9a6f6e86",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "TimeRange_Search",
+                        "label": "TimeRange",
+                        "type": 4,
+                        "typeSettings": {
+                          "selectableValues": [
+                            {
+                              "durationMs": 300000
+                            },
+                            {
+                              "durationMs": 900000
+                            },
+                            {
+                              "durationMs": 1800000
+                            },
+                            {
+                              "durationMs": 3600000
+                            },
+                            {
+                              "durationMs": 14400000
+                            },
+                            {
+                              "durationMs": 43200000
+                            },
+                            {
+                              "durationMs": 86400000
+                            },
+                            {
+                              "durationMs": 172800000
+                            },
+                            {
+                              "durationMs": 259200000
+                            },
+                            {
+                              "durationMs": 604800000
+                            },
+                            {
+                              "durationMs": 1209600000
+                            },
+                            {
+                              "durationMs": 2419200000
+                            },
+                            {
+                              "durationMs": 2592000000
+                            },
+                            {
+                              "durationMs": 5184000000
+                            },
+                            {
+                              "durationMs": 7776000000
+                            }
+                          ],
+                          "allowCustom": true
+                        },
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "value": {
+                          "durationMs": 604800000
+                        }
+                      }
+                    ],
+                    "style": "formVertical",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "customWidth": "25",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isNotEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 6"
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "parameters": [
+                      {
+                        "id": "b368ee84-0378-4371-a218-9b13e0c87500",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "Aggregate",
+                        "type": 2,
+                        "typeSettings": {
+                          "additionalResourceOptions": [],
+                          "showDefault": false
+                        },
+                        "jsonData": "[\r\n\t{\"name\" : \"min\", \"value\" : \"min\" },\r\n\t{\"name\" : \"avg\", \"value\" : \"avg\" },\r\n    {\"name\" : \"max\", \"value\" : \"max\" }\r\n]",
+                        "value": "avg"
+                      }
+                    ],
+                    "style": "formVertical",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "customWidth": "25",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isNotEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 0 - Copy - Copy"
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "parameters": [
+                      {
+                        "id": "09263fab-10f9-4961-9838-2bdcfd97e893",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "Interval",
+                        "type": 2,
+                        "typeSettings": {
+                          "additionalResourceOptions": [],
+                          "showDefault": false
+                        },
+                        "jsonData": "[\r\n\t{\"name\" : \"15min\", \"value\" : \"15min\" },\r\n\t{\"name\" : \"1hr\", \"value\" : \"1hr\" },\r\n    {\"name\" : \"1d\", \"value\" : \"1d\" }\r\n]",
+                        "value": "1d"
+                      }
+                    ],
+                    "style": "formVertical",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "customWidth": "25",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isNotEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 0 - Copy - Copy"
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "parameters": [
+                      {
+                        "id": "f43dec2f-bf0f-42bd-ab2b-e29d5af88f1d",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "charttype",
+                        "label": "Chart Type",
+                        "type": 2,
+                        "typeSettings": {
+                          "additionalResourceOptions": [],
+                          "showDefault": false
+                        },
+                        "jsonData": "[\r\n\t{\"name\" : \"timechart\", \"value\" : \"timechart\" },\r\n\t{\"name\" : \"table\", \"value\" : \"table\" }\r\n]",
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "value": "timechart"
+                      }
+                    ],
+                    "style": "formVertical",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "customWidth": "25",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isNotEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 6 - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname == \"{SearchVM}\"\r\n| where ObjectName == \"Processor Information\" or ObjectName == \"Processor\"\r\n| where CounterName == \"% Processor Time\"\r\n| summarize CPU_{Aggregate}_Utilization = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}",
+                    "size": 0,
+                    "aggregation": 3,
+                    "title": "{SearchVM} - CPU",
+                    "timeContextFromParameter": "TimeRange_Search",
+                    "showExportToExcel": true,
+                    "exportToExcelOptions": "all",
+                    "queryType": 0,
+                    "resourceType": "microsoft.resources/subscriptions",
+                    "crossComponentResources": [
+                      "{Subscriptions}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "CPU_avg_Utilization",
+                          "formatter": 18,
+                          "formatOptions": {
+                            "thresholdsOptions": "colors",
+                            "thresholdsGrid": [
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "75",
+                                "representation": "green",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "80",
+                                "representation": "yellow",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": ">=",
+                                "thresholdValue": "80",
+                                "representation": "redBright",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "Default",
+                                "thresholdValue": null,
+                                "text": "{0}{1}"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "columnMatch": "CPU_max_Utilization",
+                          "formatter": 18,
+                          "formatOptions": {
+                            "thresholdsOptions": "colors",
+                            "thresholdsGrid": [
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "75",
+                                "representation": "green",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "80",
+                                "representation": "yellow",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": ">=",
+                                "thresholdValue": "80",
+                                "representation": "redBright",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "Default",
+                                "thresholdValue": null,
+                                "text": "{0}{1}"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "columnMatch": "CPU_min_Utilization",
+                          "formatter": 18,
+                          "formatOptions": {
+                            "thresholdsOptions": "colors",
+                            "thresholdsGrid": [
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "75",
+                                "representation": "green",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "80",
+                                "representation": "yellow",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": ">=",
+                                "thresholdValue": "80",
+                                "representation": "redBright",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "Default",
+                                "thresholdValue": null,
+                                "text": "{0}{1}"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "rowLimit": 10000,
+                      "filter": true,
+                      "sortBy": [
+                        {
+                          "itemKey": "$gen_thresholds_CPU_max_Utilization_3",
+                          "sortOrder": 1
+                        }
+                      ]
+                    },
+                    "sortBy": [
+                      {
+                        "itemKey": "$gen_thresholds_CPU_max_Utilization_3",
+                        "sortOrder": 1
+                      }
+                    ],
+                    "chartSettings": {
+                      "ySettings": {
+                        "numberFormatSettings": {
+                          "unit": 1,
+                          "options": {
+                            "style": "decimal",
+                            "useGrouping": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "CPU_Search"
+                  },
+                  "name": "CPU_Search"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname == \"{SearchVM}\"\r\n| where ObjectName == \"Memory\"\r\n| where CounterName == \"% Committed Bytes In Use\" or  CounterName == \"% Used Memory\"\r\n| summarize MEM_{Aggregate}_Utilization = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}",
+                    "size": 0,
+                    "aggregation": 3,
+                    "title": "{SearchVM} - Memory",
+                    "timeContextFromParameter": "TimeRange_Search",
+                    "showExportToExcel": true,
+                    "exportToExcelOptions": "all",
+                    "queryType": 0,
+                    "resourceType": "microsoft.resources/subscriptions",
+                    "crossComponentResources": [
+                      "{Subscriptions}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "MEM_avg_Utilization",
+                          "formatter": 18,
+                          "formatOptions": {
+                            "thresholdsOptions": "colors",
+                            "thresholdsGrid": [
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "75",
+                                "representation": "green",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "80",
+                                "representation": "yellow",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": ">=",
+                                "thresholdValue": "80",
+                                "representation": "redBright",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "Default",
+                                "thresholdValue": null,
+                                "text": "{0}{1}"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "columnMatch": "MEM_max_Utilization",
+                          "formatter": 18,
+                          "formatOptions": {
+                            "thresholdsOptions": "colors",
+                            "thresholdsGrid": [
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "75",
+                                "representation": "green",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "80",
+                                "representation": "yellow",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": ">=",
+                                "thresholdValue": "80",
+                                "representation": "redBright",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "Default",
+                                "thresholdValue": null,
+                                "text": "{0}{1}"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "columnMatch": "MEM_min_Utilization",
+                          "formatter": 18,
+                          "formatOptions": {
+                            "thresholdsOptions": "colors",
+                            "thresholdsGrid": [
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "75",
+                                "representation": "green",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "<=",
+                                "thresholdValue": "80",
+                                "representation": "yellow",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": ">=",
+                                "thresholdValue": "80",
+                                "representation": "redBright",
+                                "text": "{0}{1}"
+                              },
+                              {
+                                "operator": "Default",
+                                "thresholdValue": null,
+                                "text": "{0}{1}"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "rowLimit": 10000,
+                      "filter": true
+                    },
+                    "sortBy": [],
+                    "chartSettings": {
+                      "ySettings": {
+                        "numberFormatSettings": {
+                          "unit": 1,
+                          "options": {
+                            "style": "decimal",
+                            "useGrouping": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Memory_Search"
+                  },
+                  "name": "Memory_Search"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where parsedname == \"{SearchVM}\"\r\n| where ObjectName == \"LogicalDisk\" or ObjectName == \"Logical Disk\"\r\n| where CounterName == \"Disk Transfers/sec\"\r\n| summarize DISK_{Aggregate}_IOPS = {Aggregate}(CounterValue) by bin(TimeGenerated,{Interval}) , Computer, _ResourceId\r\n| render {charttype}",
+                    "size": 0,
+                    "aggregation": 3,
+                    "title": "{SearchVM} - DiskIOPS",
+                    "timeContextFromParameter": "TimeRange_Search",
+                    "showExportToExcel": true,
+                    "exportToExcelOptions": "all",
+                    "queryType": 0,
+                    "resourceType": "microsoft.resources/subscriptions",
+                    "crossComponentResources": [
+                      "{Subscriptions}"
+                    ],
+                    "gridSettings": {
+                      "rowLimit": 10000,
+                      "filter": true
+                    }
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "DiskIOPS_Search"
+                  },
+                  "name": "DiskIOPS_Search"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Search for VM's"
+            },
+            "name": "Search Group"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "# SAP Subscriptions_ CPU and Memory above 85% utilised",
+                    "style": "info"
+                  },
+                  "customWidth": "75",
+                  "name": "text - 6",
+                  "styleSettings": {
+                    "maxWidth": "75"
+                  }
+                },
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "parameters": [
+                      {
+                        "id": "4e13a556-fe56-4cf5-928b-3dca9a6f6e86",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "TimeRange_Search",
+                        "label": "TimeRange",
+                        "type": 4,
+                        "typeSettings": {
+                          "selectableValues": [
+                            {
+                              "durationMs": 300000
+                            },
+                            {
+                              "durationMs": 900000
+                            },
+                            {
+                              "durationMs": 1800000
+                            },
+                            {
+                              "durationMs": 3600000
+                            },
+                            {
+                              "durationMs": 14400000
+                            },
+                            {
+                              "durationMs": 43200000
+                            },
+                            {
+                              "durationMs": 86400000
+                            },
+                            {
+                              "durationMs": 172800000
+                            },
+                            {
+                              "durationMs": 259200000
+                            },
+                            {
+                              "durationMs": 604800000
+                            },
+                            {
+                              "durationMs": 1209600000
+                            },
+                            {
+                              "durationMs": 2419200000
+                            },
+                            {
+                              "durationMs": 2592000000
+                            },
+                            {
+                              "durationMs": 5184000000
+                            },
+                            {
+                              "durationMs": 7776000000
+                            }
+                          ],
+                          "allowCustom": true
+                        },
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "value": {
+                          "durationMs": 86400000
+                        }
+                      }
+                    ],
+                    "style": "formVertical",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "customWidth": "25",
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isNotEqualTo",
+                    "value": "VMDetails"
+                  },
+                  "name": "parameters - 6",
+                  "styleSettings": {
+                    "maxWidth": "25"
+                  }
+                },
+                {
+                  "type": 11,
+                  "content": {
+                    "version": "LinkItem/1.0",
+                    "style": "tabs",
+                    "links": [
+                      {
+                        "id": "b3e3dc97-be10-4140-bb51-f694450b8d2b",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "CPU- Above 85% utilised",
+                        "subTarget": "CPU- Above 85% utilised",
+                        "preText": "",
+                        "style": "primary",
+                        "icon": "AzurePortal",
+                        "linkIsContextBlade": true
+                      },
+                      {
+                        "id": "89734af8-0fd8-4192-a1d5-e8bddde6891f",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Memory - Above 85% utilised",
+                        "subTarget": "Memory - Above 85% utilised",
+                        "preText": "",
+                        "style": "primary",
+                        "icon": "AzurePortal",
+                        "linkIsContextBlade": true
+                      }
+                    ]
+                  },
+                  "name": "links - 2",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where ObjectName == \"Processor Information\" or ObjectName == \"Processor\" \r\n| where CounterName == \"% Processor Time\" \r\n| summarize MAX_CPU = avg(CounterValue) by bin(TimeGenerated, 15m), Computer, _ResourceId\r\n| summarize overall_CPU_max = max(MAX_CPU) by Computer, _ResourceId, TimeGenerated\r\n| where overall_CPU_max > 85\r\n| sort by overall_CPU_max asc\r\n",
+                    "size": 0,
+                    "aggregation": 3,
+                    "title": "CPU- Above 85% utilised",
+                    "timeContextFromParameter": "TimeRange_Search",
+                    "showExportToExcel": true,
+                    "exportToExcelOptions": "all",
+                    "queryType": 0,
+                    "resourceType": "microsoft.resources/subscriptions",
+                    "crossComponentResources": [
+                      "/subscriptions/ffe21446-3735-45d8-b01b-4d85a22a455b",
+                      "/subscriptions/6c76103f-b987-4d6b-8f8d-b251cb88ffbb",
+                      "/subscriptions/61f1b943-e15f-42a1-b3e4-a098cb2826e1",
+                      "/subscriptions/4c18ce9f-e28d-4f9b-966f-ebe469a1123b",
+                      "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc",
+                      "/subscriptions/1c0c41e9-8fe8-4ae8-b996-5a1dd1cd7701"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "overall_CPU_max",
+                          "formatter": 0,
+                          "numberFormat": {
+                            "unit": 1,
+                            "options": {
+                              "style": "decimal"
+                            }
+                          }
+                        }
+                      ],
+                      "rowLimit": 10000,
+                      "filter": true
+                    },
+                    "sortBy": [],
+                    "chartSettings": {
+                      "ySettings": {
+                        "numberFormatSettings": {
+                          "unit": 1,
+                          "options": {
+                            "style": "decimal",
+                            "useGrouping": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "CPU- Above 85% utilised"
+                  },
+                  "name": "CPU- Above 85% utilised"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Perf\r\n| extend parsedname=tostring(split(Computer, \".\")[0])\r\n| where ObjectName == \"Memory\"\r\n| where CounterName == \"% Committed Bytes In Use\" or CounterName == \"% Used Memory\"\r\n| summarize MAX_MEM = avg(CounterValue) by bin(TimeGenerated, 15m), Computer, _ResourceId\r\n| summarize overall_MEM_max = max(MAX_MEM) by Computer, _ResourceId, TimeGenerated\r\n| where overall_MEM_max > 85\r\n| sort by overall_MEM_max asc",
+                    "size": 0,
+                    "aggregation": 3,
+                    "title": "Memory - Above 85% utilised",
+                    "timeContextFromParameter": "TimeRange_Search",
+                    "showExportToExcel": true,
+                    "exportToExcelOptions": "all",
+                    "queryType": 0,
+                    "resourceType": "microsoft.resources/subscriptions",
+                    "crossComponentResources": [
+                      "/subscriptions/ffe21446-3735-45d8-b01b-4d85a22a455b",
+                      "/subscriptions/6c76103f-b987-4d6b-8f8d-b251cb88ffbb",
+                      "/subscriptions/61f1b943-e15f-42a1-b3e4-a098cb2826e1",
+                      "/subscriptions/4c18ce9f-e28d-4f9b-966f-ebe469a1123b",
+                      "/subscriptions/42d55838-585f-4a26-b055-3b7c78326ebc",
+                      "/subscriptions/1c0c41e9-8fe8-4ae8-b996-5a1dd1cd7701"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "overall_MEM_max",
+                          "formatter": 0,
+                          "numberFormat": {
+                            "unit": 1,
+                            "options": {
+                              "style": "decimal"
+                            }
+                          }
+                        }
+                      ],
+                      "rowLimit": 10000,
+                      "filter": true
+                    },
+                    "sortBy": [],
+                    "chartSettings": {
+                      "ySettings": {
+                        "numberFormatSettings": {
+                          "unit": 1,
+                          "options": {
+                            "style": "decimal",
+                            "useGrouping": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Memory - Above 85% utilised"
+                  },
+                  "name": "Memory - Above 85% utilised"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "CPU/Memory above 85% utilised"
+            },
+            "name": "CPU/Memory above 85% utilised"
+          }
+        ]
+      },
+      "name": "Results"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
