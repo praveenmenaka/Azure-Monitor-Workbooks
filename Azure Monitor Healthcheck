@@ -1,0 +1,2345 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "parameters": [
+          {
+            "id": "46cfaf43-62f2-45ba-ab28-5be406e54067",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscriptions",
+            "type": 6,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n//| where name contains \"SAP\"\r\n| project id\r\n",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "dc7dec3a-74d0-41fb-9988-1ac618de15de",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.operationalinsights/workspaces\"\r\n| project id\r\n",
+            "crossComponentResources": [
+              "{Subscriptions}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 3"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "a37eede3-f17d-4ef5-be30-37ac72f84bac",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "All VM's",
+            "subTarget": "All VM's",
+            "style": "link"
+          },
+          {
+            "id": "8b92b45f-a2dc-4ea7-9c67-00671ff69079",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "List of Workspaces",
+            "subTarget": "List of Workspaces",
+            "style": "link"
+          },
+          {
+            "id": "3bd8d408-718f-44bd-8c74-9195c7ba8fae",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "List of DCRs",
+            "subTarget": "List of DCRs",
+            "style": "link"
+          },
+          {
+            "id": "f97e2c24-bbce-4d01-a309-e24265ab5ee4",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "DCR association",
+            "subTarget": "DCR association",
+            "style": "link"
+          },
+          {
+            "id": "22acb58e-917b-44ef-be29-51fd91a2c0ce",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Heartbeat and Data Collection",
+            "subTarget": "HeartbeatAndDataCollection",
+            "style": "link"
+          },
+          {
+            "id": "9f8c49b9-94c4-4c72-8742-5127347e682f",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Overall Data",
+            "subTarget": "Overall Data",
+            "style": "link"
+          },
+          {
+            "id": "6a148614-1f55-4773-82a3-c4cc1a728099",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Workspace Utilization",
+            "subTarget": "Workspace Utilization",
+            "style": "link"
+          },
+          {
+            "id": "834bf838-132b-47a9-b005-831d981456ec",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Search",
+            "subTarget": "Search",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "links - 8"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| where OS_Name != \"datadomain\"\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type, location\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type, location\r\n",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "Agent Status",
+              "noDataMessage": "No Azure Virtual Machines in the selected subscriptions. Please select the subscription(s) that contain your virtual machine(s)",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "VMname",
+                    "formatter": 7,
+                    "formatOptions": {
+                      "linkTarget": "WorkbookTemplate",
+                      "linkIsContextBlade": true,
+                      "workbookContext": {
+                        "componentIdSource": "workbook",
+                        "resourceIdsSource": "column",
+                        "resourceIds": "VmId",
+                        "templateIdSource": "static",
+                        "templateId": "/subscriptions/6c76103f-b987-4d6b-8f8d-b251cb88ffbb/resourceGroups/bnlwe-p-SP-alerts-rg/providers/microsoft.insights/workbooks/427bc850-f537-4ba1-99cd-fed23024e0a8",
+                        "typeSource": "default",
+                        "gallerySource": "default",
+                        "locationSource": "default"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "VmId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkColumn": "VmId",
+                      "linkTarget": "Resource",
+                      "linkIsContextBlade": true,
+                      "showIcon": true,
+                      "workbookContext": {
+                        "componentIdSource": "workbook",
+                        "resourceIdsSource": "cell",
+                        "templateIdSource": "static",
+                        "templateId": "/subscriptions/6c76103f-b987-4d6b-8f8d-b251cb88ffbb/resourceGroups/bnlwe-p-SP-alerts-rg/providers/microsoft.insights/workbooks/427bc850-f537-4ba1-99cd-fed23024e0a8",
+                        "typeSource": "default",
+                        "gallerySource": "default",
+                        "locationSource": "default",
+                        "workbookName": "HeartBeat and DataCollection"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "version",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "PowerState",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "running",
+                          "representation": "up",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "down",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "AgentResourceId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "linkIsContextBlade": true,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "AgentStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Succeeded",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "resourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17
+                  },
+                  {
+                    "columnMatch": "ComputerName",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "status",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "is Empty",
+                          "representation": "Blank",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "PowerStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "VM running",
+                          "representation": "Available",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "OSType",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "MMA",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "contains",
+                          "thresholdValue": "Agent",
+                          "representation": "success",
+                          "text": "Deployed"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "Unavailable",
+                          "text": "Not Deployed"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "ComputerName1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "status1",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "is Empty",
+                          "representation": "Blank",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "version1",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 5000,
+                "filter": true
+              },
+              "chartSettings": {
+                "yAxis": [
+                  "AgentStaus"
+                ],
+                "showLegend": true,
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "name": "Agent Status"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| summarize AgentOverview =count() by AMA\r\n \r\n",
+              "size": 3,
+              "title": "AgentOverview",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "AgentOverview"
+                ],
+                "showLegend": true,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "",
+                    "label": "Not Deployed",
+                    "color": "redBright"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "AgentOverview",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| where  isnotempty(AMA)\r\n| summarize Agent_Status =count() by AgentStatus\r\n\r\n",
+              "size": 3,
+              "title": "Agent Status for AMA Installed Servers",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "Agent_Status"
+                ],
+                "showLegend": true,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Succeeded",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Failed",
+                    "color": "redBright"
+                  },
+                  {
+                    "seriesName": "Updating",
+                    "color": "orange"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "Agent Status for AMA Installed Servers",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| where  isnotempty(AMA)\r\n| where AgentStatus != \"Succeeded\"\r\n| summarize Agent_Status =count() by PowerState",
+              "size": 3,
+              "title": "Failed Agent VM Status",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "showLegend": true,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "running",
+                    "label": "",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "deallocated",
+                    "color": "orange"
+                  },
+                  {
+                    "seriesName": "",
+                    "label": "VM in Failed State",
+                    "color": "redBright"
+                  }
+                ]
+              }
+            },
+            "customWidth": "50",
+            "name": "Failed Agent VM Status",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| where  isnotempty(AMA)\r\n| summarize Managed_Identity =count() by ManagedIdentity",
+              "size": 3,
+              "title": "Managed Identity for AMA Installed Servers",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "Managed_Identity"
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "Managed Identity for AMA Installed Servers",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| where  isnotempty(AMA)\r\n| summarize proxyEnabledornot =count() by proxy",
+              "size": 3,
+              "title": "Proxy Status for AMA Installed Servers",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "proxyEnabledornot"
+                ],
+                "showLegend": true,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "",
+                    "label": "Poxy not Enabled",
+                    "color": "redBright"
+                  }
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "Proxy Status for AMA Installed Servers",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, resourceGroupResourceID, resourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| where  isnotempty(AMA)\r\n| summarize Agent_Version =count() by AgentVersion",
+              "size": 3,
+              "title": "Overview of AgentVersion for AMA Installed Servers",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "yAxis": [
+                  "Agent_Version"
+                ],
+                "showLegend": true,
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "50",
+            "name": "Overview of AgentVersion for AMA Installed Servers",
+            "styleSettings": {
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "All VM's"
+      },
+      "name": "All VM's"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "List of Workspaces",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"\r\n| extend resourceGroupResourceId=strcat(\"/subscriptions/\",subscriptionId,\"/resourcegroups/\",resourceGroup)\r\n| join kind=leftouter (\r\n    resourcecontainers\r\n    | where type == 'microsoft.resources/subscriptions'\r\n    | project subscriptionId, subscriptionName = name, SubscriptionResourceId=id)\r\n    on subscriptionId\r\n| project Environment=tostring(tags.Environment),\r\n            WorkspaceID = tostring(properties['customerId']),\r\n          WorkspaceResourceId = id,\r\n          WorkspaceName=name,\r\n          DataRetentionPeriod = tostring(properties.retentionInDays),\r\n          resourceGroup,\r\n          resourceGroupResourceId,\r\n          subscriptionName,\r\n          SubscriptionResourceId\r\n          | where resourceGroup contains \"azmn-rg\"\r\n\r\n          ",
+              "size": 0,
+              "title": "List of Workspaces",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "$gen_group",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "SubscriptionResourceId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "SubscriptionResourceId",
+                    "Environment"
+                  ]
+                },
+                "sortBy": [
+                  {
+                    "itemKey": "subscriptionName",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "subscriptionName",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "name": "List of Workspaces"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat\r\n| extend Server=tostring(split(Computer, \".\")[0])\r\n| summarize by Server, OSType, WorkspaceId=TenantId",
+              "size": 0,
+              "title": "Servers Reporting to Respective Workspaces",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "name": "Servers Reporting to Respective Workspaces"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "List of Workspaces"
+      },
+      "name": "List of Workspaces"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "DCR",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == 'microsoft.insights/datacollectionrules'\r\n| extend datasources = properties.dataSources                                                           //START OF DATASOURCES&DESTINATIONS\r\n| extend destinations = properties.destinations\r\n| extend perf = case(isnotempty(datasources.performanceCounters), \"Performance counters, \", \"\")\r\n| extend windowsEventLogs = case(isnotempty(datasources.windowsEventLogs), \"Windows event logs, \", \"\")\r\n| extend sysLog = case(isnotempty(datasources.syslog), \"Linux syslog\", \"\")\r\n| extend la = case(isnotempty(destinations.logAnalytics), \"Azure Monitor Logs, \", \"\")\r\n| extend azureMonitorMetrics = case(isnotempty(destinations.azureMonitorMetrics), \"Azure Monitor Metrics\", \"\")\r\n| extend DataSources_from = trim_end(\", \", strcat(perf, windowsEventLogs, sysLog))\r\n| extend Destinations_to = trim_end(\", \", strcat(la, azureMonitorMetrics))                                 //End of DATASOURCES&DESTINATIONS\r\n| extend immutableId=tostring(properties.immutableId)                                                                   //Start of DCR Props\r\n| extend SamplingFrequencyInSeconds = tostring(properties.dataSources.performanceCounters[0].samplingFrequencyInSeconds)\r\n| extend EnabledPerformanceCounters = tostring(properties.dataSources.performanceCounters[0].counterSpecifiers)         //End of DCR Props\r\n| extend WorkspaceID = tostring(properties.destinations.logAnalytics[0].workspaceId)                                    //Start of WorkspaceDetails\r\n| extend WorkspaceResourceID = tostring(properties.destinations.logAnalytics[0].workspaceResourceId)\r\n| extend WorkspaceName = tostring(split(WorkspaceResourceID, \"/\")[8])                                                   //End of WorkspaceDetails\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter(\r\n                        resources\r\n                        | where type =~ \"microsoft.operationalinsights/workspaces\"\r\n                        | project WorkspaceID = tostring(properties['customerId']),\r\n                                  DataRetentionPeriod = tostring(properties.retentionInDays),\r\n                                  Environment_LAW=tostring(tags.Environment)) on WorkspaceID\r\n| project Environment_DCR=tostring(tags.Environment), DCR_ResourceID=id, DCR_Name=name, DCR_immutableId=immutableId, \r\n//SamplingFrequencyInSeconds, EnabledPerformanceCounters, \r\nDataSources_from, Destinations_to, Environment_LAW, WorkspaceResourceID, WorkspaceName, WorkspaceID, DataRetentionPeriod, resourceGroupName, resourceGroupResourceID, subscriptionResourceId, subscriptionName, subscriptionId\r\n| where resourceGroupName contains \"azmn-rg\"",
+              "size": 2,
+              "title": "List of DCRs",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "$gen_group",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "Environment_DCR",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "subscriptionResourceId",
+                    "Environment_DCR"
+                  ],
+                  "expandTopLevel": true
+                }
+              },
+              "sortBy": []
+            },
+            "name": "List of DCRs"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "title": "Performance Counters",
+              "items": [
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "crossComponentResources": [
+                      "{Subscriptions_DCR}"
+                    ],
+                    "parameters": [
+                      {
+                        "id": "bcddaa45-36c2-40ea-b182-630b647abf99",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "Subscriptions_DCR",
+                        "label": "Pick a Subscription",
+                        "type": 6,
+                        "multiSelect": true,
+                        "quote": "'",
+                        "delimiter": ",",
+                        "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where name contains \"SAP\"\r\n| project id",
+                        "crossComponentResources": [
+                          "{Subscriptions}"
+                        ],
+                        "typeSettings": {
+                          "additionalResourceOptions": [
+                            "value::all"
+                          ],
+                          "showDefault": false
+                        },
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "defaultValue": "value::all",
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources",
+                        "value": [
+                          "value::all"
+                        ]
+                      },
+                      {
+                        "id": "d2e30076-9a64-4e72-a39c-deda60c0a770",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "DCR",
+                        "type": 2,
+                        "multiSelect": true,
+                        "quote": "'",
+                        "delimiter": ",",
+                        "query": "resources\r\n| where type == 'microsoft.insights/datacollectionrules'\r\n| where resourceGroup contains \"azmn\"\r\n| project name",
+                        "crossComponentResources": [
+                          "{Subscriptions_DCR}"
+                        ],
+                        "typeSettings": {
+                          "additionalResourceOptions": [
+                            "value::all"
+                          ],
+                          "showDefault": false
+                        },
+                        "timeContext": {
+                          "durationMs": 86400000
+                        },
+                        "defaultValue": "value::all",
+                        "queryType": 1,
+                        "resourceType": "microsoft.resourcegraph/resources"
+                      }
+                    ],
+                    "style": "above",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  "name": "parameters - 2"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type == 'microsoft.insights/datacollectionrules'\r\n| where name in ({DCR})\r\n| mvexpand test=properties.dataSources.performanceCounters\r\n| mvexpand test1 = test.counterSpecifiers\r\n| mvexpand test2 = test.samplingFrequencyInSeconds\r\n| extend PC = tostring(test1)\r\n| extend SamplingRate = toint(test2)\r\n| extend Environment_DCR=tostring(tags.Environment)\r\n//| summarize count() by name, PC, SamplingRate\r\n//| project name, PC, SamplingRate\r\n| sort by PC asc\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| project subscriptionName, Environment_DCR, name, PC, SamplingRate\r\n\r\n",
+                    "size": 0,
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscriptions_DCR}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "subscriptionName",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Environment_DCR",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "name",
+                          "formatter": 5
+                        }
+                      ],
+                      "rowLimit": 10000,
+                      "filter": true,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionName",
+                          "Environment_DCR",
+                          "name"
+                        ]
+                      }
+                    },
+                    "tileSettings": {
+                      "titleContent": {
+                        "formatter": 1
+                      },
+                      "subtitleContent": {
+                        "columnMatch": "PC",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "SamplingRate",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "style": "decimal",
+                            "maximumFractionDigits": 2,
+                            "maximumSignificantDigits": 3
+                          }
+                        }
+                      },
+                      "showBorder": false
+                    }
+                  },
+                  "name": "query - 3"
+                }
+              ]
+            },
+            "name": "Performance Counters"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "List of DCRs"
+      },
+      "name": "DCR"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Heartbeat and Data Collection",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat                                                                                  //LastHearbeat\r\n| extend Server=split(Computer, \".\")[0]\r\n| extend LogAnlayticsOS = strcat(OSType, iff(OSName == \"\", \"\", strcat(\" (\", OSName, \")\")))\r\n| summarize LastHeartbeat = max(TimeGenerated) by tostring(Server), LogAnlayticsOS \r\n| extend HeartbeatStatus = iff((LastHeartbeat < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| summarize HBStatus=count() by HeartbeatStatus",
+              "size": 3,
+              "title": "Heartbeat",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "exportFieldName": "series",
+              "exportParameterName": "selectedHB",
+              "exportDefaultValue": "*",
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "tiles",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 10000,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "HeartbeatStatus"
+                  ]
+                }
+              },
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "HeartbeatStatus",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "HBStatus",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "redGreen"
+                  }
+                },
+                "showBorder": false,
+                "size": "auto"
+              },
+              "chartSettings": {
+                "showLegend": true
+              }
+            },
+            "customWidth": "33",
+            "name": "Heartbeat",
+            "styleSettings": {
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat                                                                                  //LastHearbeat\r\n| extend Server=split(Computer, \".\")[0]\r\n| extend LogAnlayticsOS = strcat(OSType, iff(OSName == \"\", \"\", strcat(\" (\", OSName, \")\")))\r\n| summarize LastHeartbeat = max(TimeGenerated) by tostring(Server), LogAnlayticsOS \r\n| extend HeartbeatStatus = iff((LastHeartbeat < ago(1h)), \"Not Healthy\", \"Healthy\")",
+              "size": 0,
+              "title": "Heartbeat",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "HeartbeatStatus"
+                  ]
+                }
+              },
+              "chartSettings": {
+                "showLegend": true
+              }
+            },
+            "customWidth": "33",
+            "name": "Heartbeat",
+            "styleSettings": {
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat                                                                                  //LastHearbeat\r\n| extend Server=split(Computer, \".\")[0]\r\n| extend LogAnlayticsOS = strcat(OSType, iff(OSName == \"\", \"\", strcat(\" (\", OSName, \")\")))\r\n| summarize LastHeartbeat = max(TimeGenerated) by tostring(Server), LogAnlayticsOS \r\n| extend HeartbeatStatus = iff((LastHeartbeat < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| where HeartbeatStatus == \"Not Healthy\"\r\n| project Server",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "Heartbeat Unhealthy List",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              },
+              "chartSettings": {
+                "showLegend": true
+              }
+            },
+            "customWidth": "33",
+            "name": "Heartbeat Unhealthy List",
+            "styleSettings": {
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf                                                                                        //LastDataCollection\r\n| extend Server=split(Computer, \".\")[0]\r\n| summarize LastDataCollection = max(TimeGenerated) by tostring(Server)\r\n| extend DataCollectionStatus = iff((LastDataCollection < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| summarize status=count() by DataCollectionStatus",
+              "size": 3,
+              "title": "DataCollection",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "tiles",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 10000,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "LastDataCollection"
+                  ]
+                }
+              },
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "DataCollectionStatus",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "status",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "orangeBlue"
+                  }
+                },
+                "showBorder": false,
+                "size": "auto"
+              },
+              "chartSettings": {
+                "showLegend": true
+              }
+            },
+            "customWidth": "33",
+            "name": "DataCollection",
+            "styleSettings": {
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf                                                                                        //LastDataCollection\r\n| extend Server=split(Computer, \".\")[0]\r\n| summarize LastDataCollection = max(TimeGenerated) by tostring(Server)\r\n| extend DataCollectionStatus = iff((LastDataCollection < ago(1h)), \"Not Healthy\", \"Healthy\")",
+              "size": 0,
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "DataCollectionStatus"
+                  ]
+                }
+              }
+            },
+            "customWidth": "33",
+            "name": "query - 3",
+            "styleSettings": {
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf                                                                                        //LastDataCollection\r\n| extend Server=split(Computer, \".\")[0]\r\n| summarize LastDataCollection = max(TimeGenerated) by tostring(Server)\r\n| extend DataCollectionStatus = iff((LastDataCollection < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| where DataCollectionStatus == \"Not Healthy\"\r\n| project Server",
+              "size": 0,
+              "title": "Data Collection Unhealthy List",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "customWidth": "33",
+            "name": "Data Collection Unhealthy List",
+            "styleSettings": {
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat                                                                                  //LastHearbeat\r\n| extend Server=split(Computer, \".\")[0]\r\n| extend LogAnlayticsOS = strcat(OSType, iff(OSName == \"\", \"\", strcat(\" (\", OSName, \")\")))\r\n| summarize LastHeartbeat = max(TimeGenerated) by tostring(Server), LogAnlayticsOS \r\n| extend HeartbeatStatus = iff((LastHeartbeat < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| join kind=leftouter (Perf                                                                                        //LastDataCollection\r\n| extend Server=split(Computer, \".\")[0]\r\n| summarize LastDataCollection = max(TimeGenerated) by tostring(Server)\r\n| extend DataCollectionStatus = iff((LastDataCollection < ago(1h)), \"Not Healthy\", \"Healthy\")) on Server",
+              "size": 0,
+              "title": "Heartbeat and Data Collection",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "HeartbeatStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Healthy",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Not Healthy",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "Server1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "DataCollectionStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Healthy",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Not Healthy",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "is Empty",
+                          "representation": "4",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "DataCollectionStatus"
+                  ]
+                }
+              }
+            },
+            "name": "Heartbeat and Data Collection"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "HeartbeatAndDataCollection"
+      },
+      "name": "Heartbeat and Data Collection"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Overall Data",
+        "loadType": "always",
+        "items": [
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "72247b80-c292-4f4f-8b36-c4310853f471",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Steps",
+                  "subTarget": "Steps",
+                  "style": "link"
+                },
+                {
+                  "id": "4db1e098-6716-4b55-ac73-a05df3b80939",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Final Dump",
+                  "subTarget": "Final Dump",
+                  "style": "link"
+                }
+              ]
+            },
+            "name": "links - 5"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend OS_Name= tostring(properties.extended.instanceView.osName)\r\n| extend OS_version = tostring(properties.extended.instanceView.osVersion)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend VMresourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend VMresourceGroupName=resourceGroup\r\n| where OS_Name != \"datadomain\"\r\n| project VMname=name, VmId=id, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, VMresourceGroupResourceID, VMresourceGroupName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), \r\n\tstatus = tostring(properties.provisioningState),\r\n\tversion = tostring(properties.typeHandlerVersion),\r\n    proxy = tostring(properties.settings.proxy.address)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status, AgentVersion=version,proxy) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName\r\n| project VMname, VmId, OS_Type, OS_Name, OS_version, PowerState, ManagedIdentity, AgentResourceId, AMA, AgentStatus, AgentVersion, proxy, VMresourceGroupResourceID, VMresourceGroupName, subscriptionResourceId, subscriptionName, subscriptionId, ServiceName, SID, Environment, Server_Type\r\n| join kind=fullouter\r\n(insightsresources\r\n| where type == 'microsoft.insights/datacollectionruleassociations'\r\n| extend vmResourceGroup = tolower(tostring(split(id, '/')[4])), \r\n         ServerName = tolower(tostring(split(id, '/')[8])), \r\n         dcrResourceId = tolower(tostring(properties['dataCollectionRuleId']))\r\n| extend dcrName = tolower(tostring(split(dcrResourceId, '/')[8])),\r\n         dcrResourceGroup = tolower(tostring(split(dcrResourceId, '/')[4]))\r\n| extend dcrResourceGroupResourceId= tolower(tostring(strcat(\"/subscriptions/\",subscriptionId,\"/resourcegroups/\",dcrResourceGroup)))\r\n| where isnotnull(dcrResourceId)\r\n| where dcrResourceGroup contains \"azmn-rg\"\r\n| project ServerName, dcrAssociationId=id, dcrAssociationName=name, dcrResourceId, dcrName, dcrResourceGroupResourceId, dcrResourceGroup) on $left.VMname==$right.ServerName\r\n| project-away ServerName",
+              "size": 0,
+              "title": "Resource_Graph 1(VM&Extension&DCR Association)",
+              "showRefreshButton": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Steps"
+            },
+            "name": "Resource_Graph 1(VM&Extension&DCR Association)"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == 'microsoft.insights/datacollectionrules'\r\n| extend datasources = properties.dataSources                                                           //START OF DATASOURCES&DESTINATIONS\r\n| extend destinations = properties.destinations\r\n| extend perf = case(isnotempty(datasources.performanceCounters), \"Performance counters, \", \"\")\r\n| extend windowsEventLogs = case(isnotempty(datasources.windowsEventLogs), \"Windows event logs, \", \"\")\r\n| extend sysLog = case(isnotempty(datasources.syslog), \"Linux syslog\", \"\")\r\n| extend la = case(isnotempty(destinations.logAnalytics), \"Azure Monitor Logs, \", \"\")\r\n| extend azureMonitorMetrics = case(isnotempty(destinations.azureMonitorMetrics), \"Azure Monitor Metrics\", \"\")\r\n| extend DataSources_from = trim_end(\", \", strcat(perf, windowsEventLogs, sysLog))\r\n| extend Destinations_to = trim_end(\", \", strcat(la, azureMonitorMetrics))                                 //End of DATASOURCES&DESTINATIONS\r\n| extend immutableId=tostring(properties.immutableId)                                                                   //Start of DCR Props\r\n| extend SamplingFrequencyInSeconds = tostring(properties.dataSources.performanceCounters[0].samplingFrequencyInSeconds)\r\n| extend EnabledPerformanceCounters = tostring(properties.dataSources.performanceCounters[0].counterSpecifiers)         //End of DCR Props\r\n| extend WorkspaceID = tostring(properties.destinations.logAnalytics[0].workspaceId)                                    //Start of WorkspaceDetails\r\n| extend WorkspaceResourceID = tostring(properties.destinations.logAnalytics[0].workspaceResourceId)\r\n| extend WorkspaceName = tostring(split(WorkspaceResourceID, \"/\")[8])                                                   //End of WorkspaceDetails\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n                       )on subscriptionId\r\n| join kind=leftouter(\r\n                        resources\r\n                        | where type =~ \"microsoft.operationalinsights/workspaces\"\r\n                        | extend workspaceResourceGroupResourceId = tostring(strcat(\"/subscriptions/\",subscriptionId,\"/resourcegroups/\",resourceGroup))\r\n                        | project WorkspaceID = tostring(properties['customerId']),\r\n                                  DataRetentionPeriod = tostring(properties.retentionInDays),\r\n                                  Environment_LAW=tostring(tags.Environment),\r\n                                  workspaceResourceGroupResourceId,\r\n                                  workspaceResourceGroup=resourceGroup\r\n                     ) on WorkspaceID\r\n| where resourceGroupName contains \"azmn-rg\"\r\n| project Environment_DCR=tostring(tags.Environment), DCR_Name=name, DCR_immutableId=immutableId, \r\nEnabledPerformanceCounters, \r\nDataSources_from, Destinations_to, Environment_LAW, WorkspaceResourceID, WorkspaceName, WorkspaceID, DataRetentionPeriod, workspaceResourceGroupResourceId, workspaceResourceGroup",
+              "size": 0,
+              "title": "Resource_Graph 2(DCR&LAW)",
+              "showRefreshButton": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Steps"
+            },
+            "name": "Resource_Graph 2(DCR&LAW)"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\",\"mergeType\":\"outer\",\"leftTable\":\"Resource_Graph 1(VM&Extension&DCR Association)\",\"rightTable\":\"Resource_Graph 2(DCR&LAW)\",\"leftColumn\":\"dcrName\",\"rightColumn\":\"DCR_Name\"}],\"projectRename\":[{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].VMname\",\"mergedName\":\"VMname\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].VmId\",\"mergedName\":\"VmId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].OS_Type\",\"mergedName\":\"OS_Type\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].OS_Name\",\"mergedName\":\"OS_Name\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].OS_version\",\"mergedName\":\"OS_version\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].PowerState\",\"mergedName\":\"PowerState\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].ManagedIdentity\",\"mergedName\":\"ManagedIdentity\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].AgentResourceId\",\"mergedName\":\"AgentResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].AMA\",\"mergedName\":\"AMA\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].AgentStatus\",\"mergedName\":\"AgentStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].AgentVersion\",\"mergedName\":\"AgentVersion\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].proxy\",\"mergedName\":\"proxy\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].VMresourceGroupResourceID\",\"mergedName\":\"VMresourceGroupResourceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].VMresourceGroupName\",\"mergedName\":\"VMresourceGroupName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].subscriptionResourceId\",\"mergedName\":\"subscriptionResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].subscriptionName\",\"mergedName\":\"subscriptionName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].subscriptionId\",\"mergedName\":\"subscriptionId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].ServiceName\",\"mergedName\":\"ServiceName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].SID\",\"mergedName\":\"SID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].Environment\",\"mergedName\":\"Environment\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].Server_Type\",\"mergedName\":\"Server_Type\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].dcrAssociationId\",\"mergedName\":\"dcrAssociationId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].dcrAssociationName\",\"mergedName\":\"dcrAssociationName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].dcrResourceId\",\"mergedName\":\"dcrResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].dcrName\",\"mergedName\":\"dcrName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].dcrResourceGroupResourceId\",\"mergedName\":\"dcrResourceGroupResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 1(VM&Extension&DCR Association)].dcrResourceGroup\",\"mergedName\":\"dcrResourceGroup\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].Environment_DCR\",\"mergedName\":\"Environment_DCR\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].DCR_Name\",\"mergedName\":\"DCR_Name\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].DCR_immutableId\",\"mergedName\":\"DCR_immutableId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].EnabledPerformanceCounters\",\"mergedName\":\"EnabledPerformanceCounters\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].DataSources_from\",\"mergedName\":\"DataSources_from\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].Destinations_to\",\"mergedName\":\"Destinations_to\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].Environment_LAW\",\"mergedName\":\"Environment_LAW\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].WorkspaceResourceID\",\"mergedName\":\"WorkspaceResourceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].WorkspaceName\",\"mergedName\":\"WorkspaceName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].WorkspaceID\",\"mergedName\":\"WorkspaceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].DataRetentionPeriod\",\"mergedName\":\"DataRetentionPeriod\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].workspaceResourceGroupResourceId\",\"mergedName\":\"workspaceResourceGroupResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"},{\"originalName\":\"[Resource_Graph 2(DCR&LAW)].workspaceResourceGroup\",\"mergedName\":\"workspaceResourceGroup\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70ad\"}]}",
+              "size": 0,
+              "title": "Resource_Graph 1&2(All from RG)",
+              "showRefreshButton": true,
+              "queryType": 7,
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Steps"
+            },
+            "showPin": false,
+            "name": "Resource_Graph 1&2(All from RG)"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat                                                                                  //LastHearbeat\r\n| extend Server=split(Computer, \".\")[0]\r\n| extend LogAnlayticsOS = strcat(OSType, iff(OSName == \"\", \"\", strcat(\" (\", OSName, \")\")))\r\n| summarize LastHeartbeat = max(TimeGenerated) by tostring(Server), Category \r\n| extend HeartbeatStatus = iff((LastHeartbeat < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| where Category != \"Direct Agent\"\r\n| join kind=leftouter (Perf                                                                                        //LastDataCollection\r\n| extend Server=split(Computer, \".\")[0]\r\n| summarize LastDataCollection = max(TimeGenerated) by tostring(Server)\r\n| extend DataCollectionStatus = iff((LastDataCollection < ago(1h)), \"Not Healthy\", \"Healthy\")) on Server\r\n| join kind=leftouter(\r\nPerf                                                                                       //EnabledPerformanceCounters\r\n| extend Server=split(Computer, \".\")[0]\r\n| summarize PC=tostring(make_set(ObjectName)) by tostring(Server)\r\n| extend replaced=replace_string(PC, '[', '')\r\n| extend Enabled_Performance_Counters=replace_string(replaced, ']', '')\r\n| extend Processor = case(Enabled_Performance_Counters contains \"Processor\", \"Enabled\", \"Not Enabled\")\r\n| extend Memory = case(Enabled_Performance_Counters contains \"Memory\", \"Enabled\", \"Not Enabled\")\r\n| extend LogicalDisk = case(Enabled_Performance_Counters contains \"Logical\", \"Enabled\", \"Not Enabled\")\r\n| extend Network = case(Enabled_Performance_Counters contains \"Network\", \"Enabled\", \"Not Enabled\")\r\n| extend Process = case(Enabled_Performance_Counters contains '\"Process\"', \"Enabled\", \"Not Enabled\")\r\n| extend OverallStatus = case(\r\n    Enabled_Performance_Counters contains \"Processor\" and \r\n    Enabled_Performance_Counters contains \"Memory\" and \r\n    Enabled_Performance_Counters contains \"Logical\" and\r\n    Enabled_Performance_Counters contains \"Network\" and\r\n    Enabled_Performance_Counters contains '\"Process\"',\r\n    \"All Counters enabled\", \"Missing Counters\")\r\n|project-away  PC, replaced) on $left.Server==$right.Server",
+              "size": 0,
+              "title": "Log_analytics",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showRefreshButton": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Steps"
+            },
+            "name": "Log_analytics"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\",\"mergeType\":\"outer\",\"leftTable\":\"Resource_Graph 1&2(All from RG)\",\"rightTable\":\"Log_analytics\",\"leftColumn\":\"VMname\",\"rightColumn\":\"Server\"}],\"projectRename\":[{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VMname\",\"mergedName\":\"VMname\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VmId\",\"mergedName\":\"VmId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].OS_Type\",\"mergedName\":\"OS_Type\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].OS_Name\",\"mergedName\":\"OS_Name\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].OS_version\",\"mergedName\":\"OS_version\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].PowerState\",\"mergedName\":\"PowerState\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].ManagedIdentity\",\"mergedName\":\"ManagedIdentity\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AgentResourceId\",\"mergedName\":\"AgentResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AMA\",\"mergedName\":\"AMA\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AgentStatus\",\"mergedName\":\"AgentStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AgentVersion\",\"mergedName\":\"AgentVersion\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].proxy\",\"mergedName\":\"proxy\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VMresourceGroupResourceID\",\"mergedName\":\"VMresourceGroupResourceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VMresourceGroupName\",\"mergedName\":\"VMresourceGroupName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].subscriptionResourceId\",\"mergedName\":\"subscriptionResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].subscriptionName\",\"mergedName\":\"subscriptionName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].subscriptionId\",\"mergedName\":\"subscriptionId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].ServiceName\",\"mergedName\":\"ServiceName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].SID\",\"mergedName\":\"SID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Environment\",\"mergedName\":\"Environment\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Server_Type\",\"mergedName\":\"Server_Type\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrAssociationId\",\"mergedName\":\"dcrAssociationId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrAssociationName\",\"mergedName\":\"dcrAssociationName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrResourceId\",\"mergedName\":\"dcrResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrName\",\"mergedName\":\"dcrName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrResourceGroupResourceId\",\"mergedName\":\"dcrResourceGroupResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrResourceGroup\",\"mergedName\":\"dcrResourceGroup\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Environment_DCR\",\"mergedName\":\"Environment_DCR\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DCR_Name\",\"mergedName\":\"DCR_Name\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DCR_immutableId\",\"mergedName\":\"DCR_immutableId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].EnabledPerformanceCounters\",\"mergedName\":\"EnabledPerformanceCounters\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DataSources_from\",\"mergedName\":\"DataSources_from\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Destinations_to\",\"mergedName\":\"Destinations_to\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Environment_LAW\",\"mergedName\":\"Environment_LAW\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].WorkspaceResourceID\",\"mergedName\":\"WorkspaceResourceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].WorkspaceName\",\"mergedName\":\"WorkspaceName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].WorkspaceID\",\"mergedName\":\"WorkspaceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DataRetentionPeriod\",\"mergedName\":\"DataRetentionPeriod\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].workspaceResourceGroupResourceId\",\"mergedName\":\"workspaceResourceGroupResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].workspaceResourceGroup\",\"mergedName\":\"workspaceResourceGroup\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Server\",\"mergedName\":\"Server\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Category\",\"mergedName\":\"Category\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].LastHeartbeat\",\"mergedName\":\"LastHeartbeat\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].HeartbeatStatus\",\"mergedName\":\"HeartbeatStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Server1\",\"mergedName\":\"Server1\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].LastDataCollection\",\"mergedName\":\"LastDataCollection\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].DataCollectionStatus\",\"mergedName\":\"DataCollectionStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Server2\",\"mergedName\":\"Server2\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Enabled_Performance_Counters\",\"mergedName\":\"Enabled_Performance_Counters\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Processor\",\"mergedName\":\"Processor\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Memory\",\"mergedName\":\"Memory\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].LogicalDisk\",\"mergedName\":\"LogicalDisk\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Network\",\"mergedName\":\"Network\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Process\",\"mergedName\":\"Process\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].OverallStatus\",\"mergedName\":\"OverallStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"}]}",
+              "size": 0,
+              "title": "Final Dump",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 7,
+              "gridSettings": {
+                "rowLimit": 10000,
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Final Dump"
+            },
+            "showPin": false,
+            "name": "Final Dump",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\",\"mergeType\":\"outer\",\"leftTable\":\"Resource_Graph 1&2(All from RG)\",\"rightTable\":\"Log_analytics\",\"leftColumn\":\"VMname\",\"rightColumn\":\"Server\"}],\"projectRename\":[{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VMname\",\"mergedName\":\"VMname\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VmId\",\"mergedName\":\"VmId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].OS_Type\",\"mergedName\":\"OS_Type\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].OS_Name\",\"mergedName\":\"OS_Name\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].OS_version\",\"mergedName\":\"OS_version\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].PowerState\",\"mergedName\":\"PowerState\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].ManagedIdentity\",\"mergedName\":\"ManagedIdentity\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AgentResourceId\",\"mergedName\":\"AgentResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AMA\",\"mergedName\":\"AMA\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AgentStatus\",\"mergedName\":\"AgentStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].AgentVersion\",\"mergedName\":\"AgentVersion\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].LastHeartbeat\",\"mergedName\":\"LastHeartbeat\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].HeartbeatStatus\",\"mergedName\":\"HeartbeatStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].LastDataCollection\",\"mergedName\":\"LastDataCollection\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].DataCollectionStatus\",\"mergedName\":\"DataCollectionStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].subscriptionName\",\"mergedName\":\"subscriptionName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VMresourceGroupResourceID\",\"mergedName\":\"VMresourceGroupResourceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].proxy\",\"mergedName\":\"proxy\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].VMresourceGroupName\",\"mergedName\":\"VMresourceGroupName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].subscriptionResourceId\",\"mergedName\":\"subscriptionResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].subscriptionId\",\"mergedName\":\"subscriptionId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].ServiceName\",\"mergedName\":\"ServiceName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].SID\",\"mergedName\":\"SID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Environment\",\"mergedName\":\"Environment\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Server_Type\",\"mergedName\":\"Server_Type\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrAssociationId\",\"mergedName\":\"dcrAssociationId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrAssociationName\",\"mergedName\":\"dcrAssociationName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrResourceId\",\"mergedName\":\"dcrResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrName\",\"mergedName\":\"dcrName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrResourceGroupResourceId\",\"mergedName\":\"dcrResourceGroupResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].dcrResourceGroup\",\"mergedName\":\"dcrResourceGroup\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Environment_DCR\",\"mergedName\":\"Environment_DCR\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DCR_Name\",\"mergedName\":\"DCR_Name\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DCR_immutableId\",\"mergedName\":\"DCR_immutableId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].EnabledPerformanceCounters\",\"mergedName\":\"EnabledPerformanceCounters\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DataSources_from\",\"mergedName\":\"DataSources_from\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Destinations_to\",\"mergedName\":\"Destinations_to\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].Environment_LAW\",\"mergedName\":\"Environment_LAW\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].WorkspaceResourceID\",\"mergedName\":\"WorkspaceResourceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].WorkspaceName\",\"mergedName\":\"WorkspaceName\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].WorkspaceID\",\"mergedName\":\"WorkspaceID\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].DataRetentionPeriod\",\"mergedName\":\"DataRetentionPeriod\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].workspaceResourceGroupResourceId\",\"mergedName\":\"workspaceResourceGroupResourceId\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Resource_Graph 1&2(All from RG)].workspaceResourceGroup\",\"mergedName\":\"workspaceResourceGroup\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Server\",\"mergedName\":\"Server\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Category\",\"mergedName\":\"Category\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Server1\",\"mergedName\":\"Server1\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Server2\",\"mergedName\":\"Server2\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Enabled_Performance_Counters\",\"mergedName\":\"Enabled_Performance_Counters\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Processor\",\"mergedName\":\"Processor\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Memory\",\"mergedName\":\"Memory\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].LogicalDisk\",\"mergedName\":\"LogicalDisk\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Network\",\"mergedName\":\"Network\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].Process\",\"mergedName\":\"Process\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"},{\"originalName\":\"[Log_analytics].OverallStatus\",\"mergedName\":\"OverallStatus\",\"fromId\":\"0b19b8eb-5161-4352-84c4-c46b152d70b3\"}]}",
+              "size": 0,
+              "title": "PowerState --> AMA --> DataCollectionStatus",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 7,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "AgentResourceId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "VMresourceGroupResourceID",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "VMresourceGroupName",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "subscriptionResourceId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "ServiceName",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "SID",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Environment",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Server_Type",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "dcrAssociationId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "dcrResourceId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "dcrResourceGroupResourceId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "DCR_immutableId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "EnabledPerformanceCounters",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "DataSources_from",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Destinations_to",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Environment_LAW",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "WorkspaceResourceID",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "WorkspaceID",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "workspaceResourceGroupResourceId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Server",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Category",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Server1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Server2",
+                    "formatter": 5
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "PowerState",
+                    "AMA",
+                    "DataCollectionStatus"
+                  ],
+                  "expandTopLevel": false
+                }
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Final Dump"
+            },
+            "showPin": false,
+            "name": "PowerState --> AMA --> DataCollectionStatus",
+            "styleSettings": {
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Overall Data"
+      },
+      "name": "Overall Data",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "b05af612-f638-4578-a434-ac34d376103b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SearchVM",
+                  "label": "Search 🔎",
+                  "type": 1,
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "value": "biespps200163 bnlspps200130 bnlspps200131 bnlspqsx00123 bnlspqsx00163 bnlspqs200009 bnlspdsx00102 bnlspdsx00103 bnlspdsx00095 bnlspdsx00096 bnlwespps3062 bnlsppw200003 bnlsppw200006 bnlspqsx00063 bnlspqsx00186 bnlspqsx00187 biespdsx00127 biespdsx00129 biespqsx00051 bienospus0040 biespds200015 biespps200161 biespps200162 biespps200138 biespps200140 biespps200160 biespqs200026 biespqs200027 bnlspds200016 bnlsppsx00489 bnlspps200114 bnlspps200121 bnlspps200122 bnlspps200127 bnlspps200124 bnlspps200125 bnlspqs200080 bnlspqs200082 bnlspdsx00101 btnsppsx00013"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "80",
+            "name": "parameters - 1",
+            "styleSettings": {
+              "margin": "80",
+              "padding": "80",
+              "maxWidth": "80"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "parameters": [
+                {
+                  "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "🖥️VM_Count🔚",
+                  "type": 1,
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where name in (split(\"{SearchVM}\", ' '))\r\n| count",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "10",
+            "name": "parameters - 5",
+            "styleSettings": {
+              "margin": "10",
+              "padding": "10",
+              "maxWidth": "10"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where name in (split(\"{SearchVM}\", ' '))\r\n| extend ServiceName=tostring(tags.ServiceName)\r\n| extend SID=tostring(tags.SID)\r\n| extend Environment=tostring(tags.Environment)\r\n| extend Server_Type = tostring(tags[\"Server Type\"])\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend Power = tostring(properties.extended.instanceView.powerState.code) \r\n| extend PowerState=tostring(split(Power, \"/\")[1])\r\n| extend ManagedIdentity = tostring(identity.type)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, Environment,ServiceName,SID,Server_Type, OS_Type , PowerState, ManagedIdentity, resourceGroupResourceID, resourceGroupName, subscriptionId\r\n| join kind=leftouter (\r\nresourcecontainers\r\n| where type == 'microsoft.resources/subscriptions'\r\n| project subscriptionId, subscriptionResourceId=id, subscriptionName = name\r\n)on subscriptionId\r\n| join kind=leftouter (resources\r\n| where type contains \"microsoft.compute/virtualmachines/extensions\"\r\n| where name == \"AzureMonitorWindowsAgent\" or name == \"AzureMonitorLinuxAgent\" or name == \"AMALinux\" or name == \"AMAWindows\"\r\n| parse id with * \"/virtualMachines/\" ComputerName \"/\" *\r\n| extend extensionType = tostring(properties.type), status = tostring(properties.provisioningState)\r\n| project AgentResourceId=id, ComputerName, AMA = name, AgentStatus=status) on $left.VMname==$right.ComputerName\r\n| project-away subscriptionId1, ComputerName,AgentResourceId,resourceGroupResourceID, resourceGroupName\r\n| project VMname, VmId, Environment,ServiceName,SID,Server_Type, OS_Type, PowerState, ManagedIdentity, AMA, AgentStatus, subscriptionName, subscriptionResourceId\r\n ",
+              "size": 0,
+              "title": "Selected Multiple VM quick analysis ",
+              "noDataMessage": "No Azure Virtual Machines in the selected subscriptions. Please select the subscription(s) that contain your virtual machine(s)",
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "VMname",
+                    "formatter": 7,
+                    "formatOptions": {
+                      "linkTarget": "WorkbookTemplate",
+                      "linkIsContextBlade": true,
+                      "workbookContext": {
+                        "componentIdSource": "workbook",
+                        "resourceIdsSource": "column",
+                        "resourceIds": "VmId",
+                        "templateIdSource": "static",
+                        "templateId": "/subscriptions/6c76103f-b987-4d6b-8f8d-b251cb88ffbb/resourceGroups/bnlwe-p-SP-alerts-rg/providers/microsoft.insights/workbooks/427bc850-f537-4ba1-99cd-fed23024e0a8",
+                        "typeSource": "default",
+                        "gallerySource": "default",
+                        "locationSource": "default"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "VmId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkColumn": "VmId",
+                      "linkTarget": "Resource",
+                      "linkIsContextBlade": true,
+                      "showIcon": true,
+                      "workbookContext": {
+                        "componentIdSource": "workbook",
+                        "resourceIdsSource": "cell",
+                        "templateIdSource": "static",
+                        "templateId": "/subscriptions/6c76103f-b987-4d6b-8f8d-b251cb88ffbb/resourceGroups/bnlwe-p-SP-alerts-rg/providers/microsoft.insights/workbooks/427bc850-f537-4ba1-99cd-fed23024e0a8",
+                        "typeSource": "default",
+                        "gallerySource": "default",
+                        "locationSource": "default",
+                        "workbookName": "HeartBeat and DataCollection"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "PowerState",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "running",
+                          "representation": "Available",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "disabled",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "ManagedIdentity",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "SystemAssigned",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "AMA",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "linkColumn": "VmId",
+                      "linkTarget": "Resource",
+                      "subTarget": "appsandextensions",
+                      "linkIsContextBlade": true,
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "contains",
+                          "thresholdValue": "Agent",
+                          "representation": "success",
+                          "text": "Deployed"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "Not Deployed"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "AgentStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Succeeded",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "AgentResourceId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "linkIsContextBlade": true,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "resourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17
+                  },
+                  {
+                    "columnMatch": "ComputerName",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "status",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "is Empty",
+                          "representation": "Blank",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "version",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "PowerStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "VM running",
+                          "representation": "Available",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "OSType",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "MMA",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "contains",
+                          "thresholdValue": "Agent",
+                          "representation": "success",
+                          "text": "Deployed"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "Unavailable",
+                          "text": "Not Deployed"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "ComputerName1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "status1",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "is Empty",
+                          "representation": "Blank",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "version1",
+                    "formatter": 1
+                  }
+                ],
+                "rowLimit": 5000,
+                "filter": true
+              },
+              "sortBy": [],
+              "chartSettings": {
+                "yAxis": [
+                  "AgentStaus"
+                ],
+                "showLegend": true,
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "name": "Multiple VM quick analysis ",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Heartbeat                                                                                  //LastHearbeat\r\n| extend Server=split(Computer, \".\")[0]\r\n| where Server in (split(\"{SearchVM}\", ' '))\r\n| extend LogAnlayticsOS = strcat(OSType, iff(OSName == \"\", \"\", strcat(\" (\", OSName, \")\")))\r\n| summarize LastHeartbeat = max(TimeGenerated) by tostring(Server), LogAnlayticsOS \r\n| extend HeartbeatStatus = iff((LastHeartbeat < ago(1h)), \"Not Healthy\", \"Healthy\")\r\n| join kind=leftouter (Perf                                                                                        //LastDataCollection\r\n| extend Server=split(Computer, \".\")[0]\r\n| where Server in (split(\"{SearchVM}\", ' '))\r\n| summarize LastDataCollection = max(TimeGenerated) by tostring(Server)\r\n| extend DataCollectionStatus = iff((LastDataCollection < ago(1h)), \"Not Healthy\", \"Healthy\")) on Server",
+              "size": 0,
+              "title": "Heartbeat and Data Collection",
+              "timeContext": {
+                "durationMs": 259200000
+              },
+              "showRefreshButton": true,
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Group",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "HeartbeatStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Healthy",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Not Healthy",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "Server1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "DataCollectionStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Healthy",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Not Healthy",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "is Empty",
+                          "representation": "4",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "DataCollectionStatus"
+                  ]
+                }
+              }
+            },
+            "name": "Heartbeat and Data Collection"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Search"
+      },
+      "name": "group - 0",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Workspace Utilization",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "parameters": [
+                {
+                  "id": "aa573775-de1e-4f14-8d0c-d75b1f48fd83",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Subscriptions",
+                  "label": "Pick a Subscription",
+                  "type": 6,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where name contains \"SAP\"\r\n| project id",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "ff11a571-10c0-4cac-8079-d248def8dd34",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Workspace",
+                  "type": 5,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"\r\n| where resourceGroup contains \"azmn\"\r\n| project id",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let TopTables = materialize(\r\n    Usage\r\n    | where IsBillable\r\n    | summarize IngestedGB=sum(Quantity) / 1.0E3 by DataType\r\n    | sort by IngestedGB desc\r\n    | take 10\r\n    | project DataType);\r\nUsage\r\n| where IsBillable\r\n| extend Table = iff(DataType in (TopTables), DataType, \"Other\")\r\n| extend Rank = iff(Table == \"Other\", 2, 1)\r\n| summarize IngestedGB=sum(Quantity) / 1.0E3 by Table, bin(StartTime, 1d), Rank, ResourceUri\r\n| sort by Rank asc, IngestedGB desc\r\n| project-away Rank\r\n| project StartTime, Table, IngestedGB, ResourceUri\r\n| summarize Overall=sum(IngestedGB) by Table, ResourceUri",
+              "size": 0,
+              "title": "Approx usage in GB",
+              "timeContext": {
+                "durationMs": 2678399000,
+                "endTime": "2023-08-31T18:29:59.000Z"
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "rowLimit": 10000
+              },
+              "chartSettings": {
+                "xAxis": "ResourceUri",
+                "yAxis": [
+                  "Overall"
+                ],
+                "showLegend": true,
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 5,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "name": "Approx usage in GB"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Workspace Utilization"
+      },
+      "name": "Workspace Utilization"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "DCR association",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "insightsresources\r\n| where type == 'microsoft.insights/datacollectionruleassociations'\r\n| extend vmResourceGroup = tolower(tostring(split(id, '/')[4])), \r\n         vmName = tolower(tostring(split(id, '/')[8])), \r\n         dcrResourceId = tolower(tostring(properties['dataCollectionRuleId']))\r\n| extend dcrName = tolower(tostring(split(dcrResourceId, '/')[8])),\r\n         dcrResourceGroup = tolower(tostring(split(dcrResourceId, '/')[4]))\r\n| where isnotnull(dcrResourceId)\r\n| where dcrResourceGroup contains \"azmn-rg\"\r\n| extend dcrset = strcat(dcrResourceGroup,\"/\",dcrName)\r\n| summarize dcrList = make_set(dcrset), dcrCount = count() by vmName, vmResourceGroup, subscriptionId\r\n| where ['dcrCount'] > 1\r\n| sort by ['dcrCount'] desc",
+              "size": 0,
+              "title": "VM's with more than One DCR associated",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "name": "VM's with more than One DCR associated"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "DCR association"
+      },
+      "name": "group - 9"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "styleSettings": {
+    "paddingStyle": "wide",
+    "spacingStyle": "wide"
+  },
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
