@@ -1,0 +1,1770 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "## Metrics level data collection workbook",
+              "style": "success"
+            },
+            "name": "text - 7"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{SubscriptionNames}"
+              ],
+              "parameters": [
+                {
+                  "id": "25d4557d-5baa-4c00-a253-2db7ab5b1d07",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SubscriptionNames",
+                  "type": 6,
+                  "description": "List out Subscriptions",
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": true,
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "5763db9f-d85f-4f43-bd18-44a4bd2ce7a6",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SearchVM",
+                  "label": "Search VM🔎",
+                  "type": 1,
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "value": "bnlfsplx00010 bnlfsplx00011 bnlfsplx00012 bnlfsplx00013 bnlfsplx00014 bnlfsplx00015 bnlfsplx00016 biefsplx00010 biefsplx00011 biefsplx00012 biefsplx00013 biefsplx00014"
+                },
+                {
+                  "id": "87405d87-4f20-4211-9100-f9799ed4fffa",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VirtualMachines",
+                  "type": 5,
+                  "description": "List down all VM's",
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where name in (split(\"{SearchVM}\", ' '))\r\n| project id\r\n",
+                  "crossComponentResources": [
+                    "{SubscriptionNames}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "version": "KqlParameterItem/1.0",
+                  "name": "🖥️VM_Count🔚",
+                  "type": 1,
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where name in (split(\"{SearchVM}\", ' '))\r\n| count",
+                  "crossComponentResources": [
+                    "{SubscriptionNames}"
+                  ],
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "id": "8870016b-1404-4f44-80ff-75beb2e5771c"
+                },
+                {
+                  "id": "ceb4b68e-bd4a-4e97-85b6-c89c8ff6a276",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "type": 4,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "value": {
+                    "durationMs": 86400000
+                  }
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 0",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook0dd9fc16-357d-49b7-a686-7adeb8625b24",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.compute/virtualmachines",
+              "metricScope": 0,
+              "resourceParameter": "VirtualMachines",
+              "resourceIds": [
+                "{VirtualMachines}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "timeGrain": "P1D",
+              "metrics": [
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Percentage CPU",
+                  "aggregation": 2,
+                  "columnName": "Percentage CPU (Min)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Percentage CPU",
+                  "aggregation": 4,
+                  "columnName": "Percentage CPU (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Percentage CPU",
+                  "aggregation": 3,
+                  "columnName": "Percentage CPU (Max)"
+                }
+              ],
+              "title": "CPU",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Name",
+                  "formatter": 13
+                },
+                "leftContent": {
+                  "columnMatch": "Value",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "AzureResource",
+                "sizeSettings": "Value",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Value",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Value",
+                  "heatmapPalette": "greenRed"
+                },
+                "locInfoColumn": "Name"
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Subscription",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Value",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "resourceLimit": 10000,
+              "showOpenInMe": true,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource"
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Metric",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Aggregation",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Value",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Timeline",
+                    "formatter": 9
+                  }
+                ],
+                "rowLimit": 10000,
+                "labelSettings": [
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "label": "Percentage CPU (Min)"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "label": "Percentage CPU Timeline"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "label": "Percentage CPU (Min)"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "label": "Percentage CPU Timeline"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "label": "Percentage CPU (Min)"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "label": "Percentage CPU Timeline"
+                  }
+                ]
+              },
+              "sortBy": [],
+              "showExportToExcel": true
+            },
+            "name": "metric - 1 - Copy",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook0dd9fc16-357d-49b7-a686-7adeb8625b24",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.compute/virtualmachines",
+              "metricScope": 0,
+              "resourceParameter": "VirtualMachines",
+              "resourceIds": [
+                "{VirtualMachines}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "timeGrain": "P1D",
+              "metrics": [
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                  "aggregation": 2,
+                  "columnName": "Available Memory Bytes (Min)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                  "aggregation": 4,
+                  "columnName": "Available Memory Bytes (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                  "aggregation": 3,
+                  "columnName": "Available Memory Bytes (Max)"
+                }
+              ],
+              "title": "Memory ",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Name",
+                  "formatter": 13
+                },
+                "leftContent": {
+                  "columnMatch": "Value",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "AzureResource",
+                "sizeSettings": "Value",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Value",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Value",
+                  "heatmapPalette": "greenRed"
+                },
+                "locInfoColumn": "Name"
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Subscription",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Value",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "resourceLimit": 10000,
+              "showOpenInMe": true,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource"
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Metric",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Aggregation",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Value",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Timeline",
+                    "formatter": 9
+                  }
+                ],
+                "rowLimit": 10000,
+                "labelSettings": [
+                  {
+                    "columnId": "Available Memory Bytes (Min)",
+                    "label": "Available Memory Bytes (Min)"
+                  },
+                  {
+                    "columnId": "Available Memory Bytes (Min) Timeline",
+                    "label": "Available Memory Bytes (Min) Timeline"
+                  },
+                  {
+                    "columnId": "Available Memory Bytes (Avg)",
+                    "label": "Available Memory Bytes (Avg)"
+                  },
+                  {
+                    "columnId": "Available Memory Bytes (Avg) Timeline",
+                    "label": "Available Memory Bytes (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "Available Memory Bytes (Max)",
+                    "label": "Available Memory Bytes (Max)"
+                  },
+                  {
+                    "columnId": "Available Memory Bytes (Max) Timeline",
+                    "label": "Available Memory Bytes (Max) Timeline"
+                  }
+                ]
+              },
+              "sortBy": [],
+              "showExportToExcel": true
+            },
+            "name": "metric - 1 - Copy - Copy",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook0dd9fc16-357d-49b7-a686-7adeb8625b24",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.compute/virtualmachines",
+              "metricScope": 0,
+              "resourceParameter": "VirtualMachines",
+              "resourceIds": [
+                "{VirtualMachines}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                  "aggregation": 2,
+                  "columnName": "Data Disk IOPS Consumed Percentage (Min)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                  "aggregation": 4,
+                  "columnName": "Data Disk IOPS Consumed Percentage (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                  "aggregation": 3,
+                  "columnName": "Data Disk IOPS Consumed Percentage (Max)"
+                }
+              ],
+              "title": "Data Disk IOPS",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Name",
+                  "formatter": 13
+                },
+                "leftContent": {
+                  "columnMatch": "Value",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "AzureResource",
+                "sizeSettings": "Value",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Value",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Value",
+                  "heatmapPalette": "greenRed"
+                },
+                "locInfoColumn": "Name"
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Subscription",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Value",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "resourceLimit": 10000,
+              "showOpenInMe": true,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource"
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Metric",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Aggregation",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Value",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Timeline",
+                    "formatter": 9
+                  }
+                ],
+                "rowLimit": 10000,
+                "labelSettings": [
+                  {
+                    "columnId": "Data Disk IOPS Consumed Percentage (Min)",
+                    "label": "Data Disk IOPS Consumed Percentage (Min)"
+                  },
+                  {
+                    "columnId": "Data Disk IOPS Consumed Percentage (Min) Timeline",
+                    "label": "Data Disk IOPS Consumed Percentage (Min) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk IOPS Consumed Percentage (Avg)",
+                    "label": "Data Disk IOPS Consumed Percentage (Avg)"
+                  },
+                  {
+                    "columnId": "Data Disk IOPS Consumed Percentage (Avg) Timeline",
+                    "label": "Data Disk IOPS Consumed Percentage (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk IOPS Consumed Percentage (Max)",
+                    "label": "Data Disk IOPS Consumed Percentage (Max)"
+                  },
+                  {
+                    "columnId": "Data Disk IOPS Consumed Percentage (Max) Timeline",
+                    "label": "Data Disk IOPS Consumed Percentage (Max) Timeline"
+                  }
+                ]
+              },
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all"
+            },
+            "name": "metric - 1 - Copy - Copy - Copy",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook0dd9fc16-357d-49b7-a686-7adeb8625b24",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.compute/virtualmachines",
+              "metricScope": 0,
+              "resourceParameter": "VirtualMachines",
+              "resourceIds": [
+                "{VirtualMachines}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "timeGrain": "P1D",
+              "metrics": [
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Disk Read Bytes",
+                  "aggregation": 4,
+                  "columnName": "Disk Read Bytes (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Disk Read Bytes",
+                  "aggregation": 1,
+                  "columnName": "Disk Read Bytes (Sum)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                  "aggregation": 4,
+                  "columnName": "Data Disk Read Bytes/Sec (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                  "aggregation": 1,
+                  "columnName": "Data Disk Read Bytes/Sec (Sum)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--OS Disk Read Bytes/sec",
+                  "aggregation": 4,
+                  "columnName": "OS Disk Read Bytes/Sec (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--OS Disk Read Bytes/sec",
+                  "aggregation": 1,
+                  "columnName": "OS Disk Read Bytes/Sec (Sum)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Disk Write Bytes",
+                  "aggregation": 4,
+                  "columnName": "Disk Write Bytes (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Disk Write Bytes",
+                  "aggregation": 1,
+                  "columnName": "Disk Write Bytes (Sum)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                  "aggregation": 4,
+                  "columnName": "Data Disk Write Bytes/Sec (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                  "aggregation": 1,
+                  "columnName": "Data Disk Write Bytes/Sec (Sum)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--OS Disk Write Bytes/sec",
+                  "aggregation": 4,
+                  "columnName": "OS Disk Write Bytes/Sec (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--OS Disk Write Bytes/sec",
+                  "aggregation": 1,
+                  "columnName": "OS Disk Write Bytes/Sec (Sum)"
+                }
+              ],
+              "title": "Data Disk Read and Write Bytes/sec",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Name",
+                  "formatter": 13
+                },
+                "leftContent": {
+                  "columnMatch": "Value",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "AzureResource",
+                "sizeSettings": "Value",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Value",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Value",
+                  "heatmapPalette": "greenRed"
+                },
+                "locInfoColumn": "Name"
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Subscription",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Value",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "resourceLimit": 10000,
+              "showOpenInMe": true,
+              "showExpandCollapseGrid": true,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Disk Read Bytes",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Disk Read Bytes Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--OS Disk Read Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--OS Disk Read Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--OS Disk Write Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--OS Disk Write Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Disk Read Bytes (Min) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Disk Read Bytes (Avg) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Disk Read Bytes (Max) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Data Disk Read Bytes/Sec (Min) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Data Disk Read Bytes/Sec (Avg) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Data Disk Read Bytes/Sec (Max) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "OS Disk Read Bytes/Sec (Min) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "OS Disk Read Bytes/Sec (Avg) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "OS Disk Read Bytes/Sec (Max) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Disk Write Bytes (Min) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Disk Write Bytes",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Disk Write Bytes (Avg) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Disk Write Bytes (Max) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Data Disk Write Bytes/Sec (Min) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Data Disk Write Bytes/Sec (Max) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "OS Disk Write Bytes/Sec (Min) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "OS Disk Write Bytes/Sec (Avg) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "OS Disk Write Bytes/Sec (Max) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Data Disk Write Bytes/Sec (Avg) Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Metric",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Aggregation",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Value",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Timeline",
+                    "formatter": 9
+                  },
+                  {
+                    "columnMatch": "Disk Read Bytes (Min)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Disk Read Bytes (Avg)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Disk Read Bytes (Max)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Data Disk Read Bytes/Sec (Min)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Data Disk Read Bytes/Sec (Avg)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Data Disk Read Bytes/Sec (Max)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "OS Disk Read Bytes/Sec (Min)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "OS Disk Read Bytes/Sec (Avg)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "OS Disk Read Bytes/Sec (Max)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Disk Write Bytes (Min)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Disk Write Bytes (Avg)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Disk Write Bytes (Max)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Data Disk Write Bytes/Sec (Min)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Data Disk Write Bytes/Sec (Avg)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Data Disk Write Bytes/Sec (Max)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "OS Disk Write Bytes/Sec (Min)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "OS Disk Write Bytes/Sec (Avg)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "OS Disk Write Bytes/Sec (Max)",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  }
+                ],
+                "rowLimit": 10000,
+                "filter": true,
+                "labelSettings": [
+                  {
+                    "columnId": "Disk Read Bytes (Min)",
+                    "label": "Disk Read Bytes (Min)"
+                  },
+                  {
+                    "columnId": "Disk Read Bytes (Min) Timeline",
+                    "label": "Disk Read Bytes (Min) Timeline"
+                  },
+                  {
+                    "columnId": "Disk Read Bytes (Avg)",
+                    "label": "Disk Read Bytes (Avg)"
+                  },
+                  {
+                    "columnId": "Disk Read Bytes (Avg) Timeline",
+                    "label": "Disk Read Bytes (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "Disk Read Bytes (Max)",
+                    "label": "Disk Read Bytes (Max)"
+                  },
+                  {
+                    "columnId": "Disk Read Bytes (Max) Timeline",
+                    "label": "Disk Read Bytes (Max) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk Read Bytes/Sec (Min)",
+                    "label": "Data Disk Read Bytes/Sec (Min)"
+                  },
+                  {
+                    "columnId": "Data Disk Read Bytes/Sec (Min) Timeline",
+                    "label": "Data Disk Read Bytes/Sec (Min) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk Read Bytes/Sec (Avg)",
+                    "label": "Data Disk Read Bytes/Sec (Avg)"
+                  },
+                  {
+                    "columnId": "Data Disk Read Bytes/Sec (Avg) Timeline",
+                    "label": "Data Disk Read Bytes/Sec (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk Read Bytes/Sec (Max)",
+                    "label": "Data Disk Read Bytes/Sec (Max)"
+                  },
+                  {
+                    "columnId": "Data Disk Read Bytes/Sec (Max) Timeline",
+                    "label": "Data Disk Read Bytes/Sec (Max) Timeline"
+                  },
+                  {
+                    "columnId": "OS Disk Read Bytes/Sec (Min)",
+                    "label": "OS Disk Read Bytes/Sec (Min)"
+                  },
+                  {
+                    "columnId": "OS Disk Read Bytes/Sec (Min) Timeline",
+                    "label": "OS Disk Read Bytes/Sec (Min) Timeline"
+                  },
+                  {
+                    "columnId": "OS Disk Read Bytes/Sec (Avg)",
+                    "label": "OS Disk Read Bytes/Sec (Avg)"
+                  },
+                  {
+                    "columnId": "OS Disk Read Bytes/Sec (Avg) Timeline",
+                    "label": "OS Disk Read Bytes/Sec (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "OS Disk Read Bytes/Sec (Max)",
+                    "label": "OS Disk Read Bytes/Sec (Max)"
+                  },
+                  {
+                    "columnId": "OS Disk Read Bytes/Sec (Max) Timeline",
+                    "label": "OS Disk Read Bytes/Sec (Max) Timeline"
+                  },
+                  {
+                    "columnId": "Disk Write Bytes (Min)",
+                    "label": "Disk Write Bytes (Min)"
+                  },
+                  {
+                    "columnId": "Disk Write Bytes (Min) Timeline",
+                    "label": "Disk Write Bytes (Min) Timeline"
+                  },
+                  {
+                    "columnId": "Disk Write Bytes (Avg)",
+                    "label": "Disk Write Bytes (Avg)"
+                  },
+                  {
+                    "columnId": "Disk Write Bytes (Avg) Timeline",
+                    "label": "Disk Write Bytes (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "Disk Write Bytes (Max)",
+                    "label": "Disk Write Bytes (Max)"
+                  },
+                  {
+                    "columnId": "Disk Write Bytes (Max) Timeline",
+                    "label": "Disk Write Bytes (Max) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk Write Bytes/Sec (Min)",
+                    "label": "Data Disk Write Bytes/Sec (Min)"
+                  },
+                  {
+                    "columnId": "Data Disk Write Bytes/Sec (Min) Timeline",
+                    "label": "Data Disk Write Bytes/Sec (Min) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk Write Bytes/Sec (Avg)",
+                    "label": "Data Disk Write Bytes/Sec (Avg)"
+                  },
+                  {
+                    "columnId": "Data Disk Write Bytes/Sec (Avg) Timeline",
+                    "label": "Data Disk Write Bytes/Sec (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "Data Disk Write Bytes/Sec (Max)",
+                    "label": "Data Disk Write Bytes/Sec (Max)"
+                  },
+                  {
+                    "columnId": "Data Disk Write Bytes/Sec (Max) Timeline",
+                    "label": "Data Disk Write Bytes/Sec (Max) Timeline"
+                  },
+                  {
+                    "columnId": "OS Disk Write Bytes/Sec (Min)",
+                    "label": "OS Disk Write Bytes/Sec (Min)"
+                  },
+                  {
+                    "columnId": "OS Disk Write Bytes/Sec (Min) Timeline",
+                    "label": "OS Disk Write Bytes/Sec (Min) Timeline"
+                  },
+                  {
+                    "columnId": "OS Disk Write Bytes/Sec (Avg)",
+                    "label": "OS Disk Write Bytes/Sec (Avg)"
+                  },
+                  {
+                    "columnId": "OS Disk Write Bytes/Sec (Avg) Timeline",
+                    "label": "OS Disk Write Bytes/Sec (Avg) Timeline"
+                  },
+                  {
+                    "columnId": "OS Disk Write Bytes/Sec (Max)",
+                    "label": "OS Disk Write Bytes/Sec (Max)"
+                  },
+                  {
+                    "columnId": "OS Disk Write Bytes/Sec (Max) Timeline",
+                    "label": "OS Disk Write Bytes/Sec (Max) Timeline"
+                  }
+                ]
+              },
+              "sortBy": [],
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all"
+            },
+            "showPin": false,
+            "name": "metric - 1 - Copy - Copy",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook0dd9fc16-357d-49b7-a686-7adeb8625b24",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.compute/virtualmachines",
+              "metricScope": 0,
+              "resourceParameter": "VirtualMachines",
+              "resourceIds": [
+                "{VirtualMachines}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Network In Total",
+                  "aggregation": 4,
+                  "columnName": "Network in Total (Avg)"
+                },
+                {
+                  "namespace": "microsoft.compute/virtualmachines",
+                  "metric": "microsoft.compute/virtualmachines--Network Out Total",
+                  "aggregation": 4,
+                  "columnName": "Network in Total (Avg)"
+                }
+              ],
+              "title": "Network In/Out ",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Name",
+                  "formatter": 13
+                },
+                "leftContent": {
+                  "columnMatch": "Value",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "AzureResource",
+                "sizeSettings": "Value",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Value",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Value",
+                  "heatmapPalette": "greenRed"
+                },
+                "locInfoColumn": "Name"
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Subscription",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Value",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "resourceLimit": 10000,
+              "showOpenInMe": true,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource"
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Percentage CPU",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Available Memory Bytes",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk IOPS Consumed Percentage",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network In Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Network Out Total",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Read Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec Timeline",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "microsoft.compute/virtualmachines--Data Disk Write Bytes/sec",
+                    "formatter": 1,
+                    "numberFormat": {
+                      "unit": 11,
+                      "options": null
+                    }
+                  },
+                  {
+                    "columnMatch": "Metric",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Aggregation",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Value",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Timeline",
+                    "formatter": 9
+                  }
+                ],
+                "rowLimit": 10000,
+                "labelSettings": [
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Network In Total",
+                    "label": "Network In Total (Average)"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Network In Total Timeline",
+                    "label": "Network In Total Timeline"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Network Out Total",
+                    "label": "Network Out Total (Average)"
+                  },
+                  {
+                    "columnId": "microsoft.compute/virtualmachines--Network Out Total Timeline",
+                    "label": "Network Out Total Timeline"
+                  }
+                ]
+              },
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all"
+            },
+            "name": "metric - 1 - Copy - Copy - Copy",
+            "styleSettings": {
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "name": "group - 8",
+      "styleSettings": {
+        "showBorder": true
+      }
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
