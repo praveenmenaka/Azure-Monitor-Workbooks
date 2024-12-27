@@ -1,0 +1,389 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "2241c21b-5a59-4a42-b3a9-b503de023938",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "label": "Time Range",
+            "type": 4,
+            "isRequired": true,
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 300000
+                },
+                {
+                  "durationMs": 900000
+                },
+                {
+                  "durationMs": 1800000
+                },
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ]
+            },
+            "value": {
+              "durationMs": 7776000000
+            }
+          },
+          {
+            "id": "41637606-f74f-4e7b-8380-8ff980f79138",
+            "version": "KqlParameterItem/1.0",
+            "name": "SelectedVM",
+            "type": 5,
+            "value": "value::1",
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.compute/virtualmachines": true
+              },
+              "additionalResourceOptions": [
+                "value::1"
+              ]
+            }
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resources/resourcegroups"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Heartbeat\r\n| summarize LastHeartbeat = max(TimeGenerated) by Computer\r\n| extend LastHeartbeat_C = strcat(\"LastHeartbeat\")\r\n| extend [\"Last Heartbeat in Seconds\"] = totimespan(now() - LastHeartbeat) /1m\r\n| summarize count() by Computer, LastHeartbeat, LastHeartbeat_C, [\"Last Heartbeat in Seconds\"]",
+        "size": 1,
+        "title": "Heartbeat",
+        "timeContextFromParameter": "TimeRange",
+        "queryType": 0,
+        "resourceType": "microsoft.compute/virtualmachines",
+        "crossComponentResources": [
+          "{SelectedVM}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "LastHeartbeat_C",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "subtitleContent": {
+            "columnMatch": "Computer",
+            "formatter": 4,
+            "formatOptions": {
+              "palette": "blue",
+              "compositeBarSettings": {
+                "labelText": "",
+                "columnSettings": []
+              }
+            }
+          },
+          "leftContent": {
+            "columnMatch": "LastHeartbeat",
+            "formatter": 6,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "style": "decimal",
+                "maximumFractionDigits": 2,
+                "maximumSignificantDigits": 3
+              }
+            },
+            "dateFormat": {
+              "formatName": null
+            }
+          },
+          "secondaryContent": {
+            "columnMatch": "Last Heartbeat in Seconds",
+            "formatter": 18,
+            "formatOptions": {
+              "thresholdsOptions": "icons",
+              "thresholdsGrid": [
+                {
+                  "operator": "<",
+                  "thresholdValue": "60",
+                  "representation": "success",
+                  "text": "{0}{1} minutes ago"
+                },
+                {
+                  "operator": "Default",
+                  "thresholdValue": null,
+                  "representation": "warning",
+                  "text": "{0}{1} minutes ago"
+                }
+              ]
+            },
+            "numberFormat": {
+              "unit": 0,
+              "options": {
+                "style": "decimal",
+                "maximumSignificantDigits": 1
+              }
+            }
+          },
+          "showBorder": false,
+          "size": "full"
+        }
+      },
+      "customWidth": "50",
+      "name": "Heartbeat",
+      "styleSettings": {
+        "maxWidth": "50",
+        "showBorder": true
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Perf\r\n| summarize LastDatacollection = max(TimeGenerated) by Computer\r\n| extend LastDatacollection_C = strcat(\"LastDatacollection\")\r\n| extend [\"Last Datacollection in Seconds\"] = totimespan(now() - LastDatacollection) /1m\r\n| summarize count() by Computer, LastDatacollection, LastDatacollection_C, [\"Last Datacollection in Seconds\"]",
+        "size": 1,
+        "title": "Perf - Data collection ",
+        "timeContextFromParameter": "TimeRange",
+        "queryType": 0,
+        "resourceType": "microsoft.compute/virtualmachines",
+        "crossComponentResources": [
+          "{SelectedVM}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "LastDatacollection_C",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "subtitleContent": {
+            "columnMatch": "Computer",
+            "formatter": 4,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "leftContent": {
+            "columnMatch": "LastDatacollection",
+            "formatter": 6,
+            "numberFormat": {
+              "unit": 0,
+              "options": {
+                "style": "decimal",
+                "maximumSignificantDigits": 1
+              }
+            },
+            "dateFormat": {
+              "formatName": null
+            }
+          },
+          "secondaryContent": {
+            "columnMatch": "Last Datacollection in Seconds",
+            "formatter": 18,
+            "formatOptions": {
+              "thresholdsOptions": "icons",
+              "thresholdsGrid": [
+                {
+                  "operator": "<",
+                  "thresholdValue": "60",
+                  "representation": "success",
+                  "text": "{0}{1} minutes ago"
+                },
+                {
+                  "operator": "Default",
+                  "thresholdValue": null,
+                  "representation": "warning",
+                  "text": "{0}{1} minutes ago"
+                }
+              ]
+            },
+            "numberFormat": {
+              "unit": 0,
+              "options": {
+                "style": "decimal",
+                "maximumSignificantDigits": 1
+              }
+            },
+            "dateFormat": {
+              "formatName": null
+            }
+          },
+          "showBorder": false,
+          "size": "full"
+        }
+      },
+      "customWidth": "50",
+      "name": "Perf",
+      "styleSettings": {
+        "maxWidth": "50",
+        "showBorder": true
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Perf\r\n| extend Metrics = case ((ObjectName == \"Processor Information\" or ObjectName == \"Processor\") and ( CounterName == \"% Processor Time\"), \"CPU Utlization\", \r\n                            (ObjectName == \"Memory\") and (CounterName == \"% Committed Bytes In Use\" or  CounterName == \"% Used Memory\"), \"Memory Utlization\", \r\n                            (ObjectName == \"LogicalDisk\" or ObjectName == \"Logical Disk\") and (CounterName == \"Disk Transfers/sec\"), \"DISK_IOPS\",\r\n                             (ObjectName == \"LogicalDisk\" or ObjectName == \"Logical Disk\") and (CounterName == \"% Used Space\"), \"DiskUtilization\", \"Others\")\r\n                             | where Metrics !contains \"Others\"\r\n| summarize count() by CounterName, Computer, Metrics",
+        "size": 1,
+        "title": "Metrics",
+        "timeContextFromParameter": "TimeRange",
+        "queryType": 0,
+        "resourceType": "microsoft.compute/virtualmachines",
+        "crossComponentResources": [
+          "{SelectedVM}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "Metrics",
+            "formatter": 1
+          },
+          "subtitleContent": {
+            "columnMatch": "CounterName",
+            "formatter": 18,
+            "formatOptions": {
+              "thresholdsOptions": "icons",
+              "thresholdsGrid": [
+                {
+                  "operator": "Default",
+                  "thresholdValue": null,
+                  "representation": "success",
+                  "text": "{0}{1}"
+                }
+              ]
+            }
+          },
+          "showBorder": false,
+          "rowLimit": 100,
+          "size": "auto"
+        }
+      },
+      "customWidth": "50",
+      "name": "Metrics - Copy",
+      "styleSettings": {
+        "maxWidth": "50",
+        "showBorder": true
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Perf\r\n| summarize avgCounterValue = avg(CounterValue) by bin(TimeGenerated, 1d), Computer\r\n| summarize [\"DataCollection(From)\"]=min(TimeGenerated), [\"DataCollection(To)\"]=max(TimeGenerated), DaysCount = dcount(TimeGenerated) by Computer",
+        "size": 1,
+        "title": "Data collection DaysCount",
+        "timeContextFromParameter": "TimeRange",
+        "queryType": 0,
+        "resourceType": "microsoft.compute/virtualmachines",
+        "crossComponentResources": [
+          "{SelectedVM}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {
+            "columnMatch": "Computer",
+            "formatter": 18,
+            "formatOptions": {
+              "thresholdsOptions": "icons",
+              "thresholdsGrid": [
+                {
+                  "operator": "Default",
+                  "thresholdValue": null,
+                  "representation": "success",
+                  "text": "{0}{1}"
+                }
+              ],
+              "compositeBarSettings": {
+                "labelText": "",
+                "columnSettings": []
+              }
+            }
+          },
+          "leftContent": {
+            "columnMatch": "DataCollection(From)",
+            "formatter": 6,
+            "dateFormat": {
+              "showUtcTime": null,
+              "formatName": "shortDateTimePattern"
+            }
+          },
+          "rightContent": {
+            "columnMatch": "DataCollection(To)",
+            "formatter": 6,
+            "dateFormat": {
+              "showUtcTime": null,
+              "formatName": "shortDateTimePattern"
+            }
+          },
+          "secondaryContent": {
+            "columnMatch": "DaysCount",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            },
+            "numberFormat": {
+              "unit": 27,
+              "options": {
+                "style": "decimal"
+              }
+            }
+          },
+          "showBorder": false,
+          "rowLimit": 100,
+          "size": "auto"
+        }
+      },
+      "customWidth": "50",
+      "name": "Data collection DaysCount",
+      "styleSettings": {
+        "maxWidth": "50",
+        "showBorder": true
+      }
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "fromTemplateId": "Community-Workbooks/Virtual Machines/Virtual machine details",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
