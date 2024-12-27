@@ -1,0 +1,477 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "<img src=\"https://www.bing.com/th/id/OGC.13e53cea17eefe002717e2df7fce8edb?pid=1.7&rurl=https%3a%2f%2fcdn.dribbble.com%2fusers%2f4215307%2fscreenshots%2f9537315%2fsmile_unilever_preloader_800x600.gif&ehk=3oUL2Ju6WdG7GUr0957Ep9BlkUK7l5FtDXt%2bD0i2lfc%3d\" alt=\"HCLTech\" width=\"150\" height=\"140\">"
+                  },
+                  "customWidth": "15",
+                  "name": "text - 5",
+                  "styleSettings": {
+                    "margin": "15",
+                    "padding": "15",
+                    "maxWidth": "15"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": ""
+                  },
+                  "customWidth": "7.5",
+                  "name": "text - 3",
+                  "styleSettings": {
+                    "margin": "7.5",
+                    "padding": "7.5",
+                    "maxWidth": "7.5"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "<h1> IP Configurations (Network Interfaces - Name and Private IP Address) </h1>",
+                    "style": "success"
+                  },
+                  "customWidth": "55",
+                  "name": "text - 4",
+                  "styleSettings": {
+                    "margin": "55",
+                    "padding": "55",
+                    "maxWidth": "55"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": ""
+                  },
+                  "customWidth": "12.5",
+                  "name": "text - 4",
+                  "styleSettings": {
+                    "margin": "12.5",
+                    "padding": "12.5",
+                    "maxWidth": "12.5"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "<img src=\"https://media.tenor.com/fUaP_-QE9DUAAAAM/hcl.gif\" alt=\"HCLTech\" width=\"300\" height=\"50\">"
+                  },
+                  "customWidth": "10",
+                  "name": "text - 5 - Copy",
+                  "styleSettings": {
+                    "margin": "10",
+                    "padding": "10",
+                    "maxWidth": "10"
+                  }
+                }
+              ]
+            },
+            "name": "group - 9",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "loadType": "explicit",
+              "loadButtonText": "Click the link and Select the Resources ",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": ""
+                  },
+                  "customWidth": "40",
+                  "name": "text - 9",
+                  "styleSettings": {
+                    "margin": "40",
+                    "padding": "40",
+                    "maxWidth": "40"
+                  }
+                },
+                {
+                  "type": 11,
+                  "content": {
+                    "version": "LinkItem/1.0",
+                    "style": "tabs",
+                    "tabStyle": "bigger",
+                    "links": [
+                      {
+                        "id": "cdc13b13-89d5-418e-9d7d-29f4d28fb95a",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Overall servers list",
+                        "subTarget": "Overall servers list",
+                        "preText": "",
+                        "style": "link"
+                      },
+                      {
+                        "id": "1ad6b02f-d305-4b29-96ca-59d50a6bdd92",
+                        "cellValue": "selectedTab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Search servers",
+                        "subTarget": "Search servers",
+                        "preText": "",
+                        "style": "link"
+                      }
+                    ]
+                  },
+                  "customWidth": "50",
+                  "name": "links - 0",
+                  "styleSettings": {
+                    "margin": "50",
+                    "padding": "50",
+                    "maxWidth": "50"
+                  }
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": ""
+                  },
+                  "customWidth": "40",
+                  "name": "text - 9 - Copy",
+                  "styleSettings": {
+                    "margin": "40",
+                    "padding": "40",
+                    "maxWidth": "40"
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Overall servers list",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "value::all"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where name contains \"SAP\"\r\n| project id",
+                              "crossComponentResources": [
+                                "value::all"
+                              ],
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "defaultValue": "value::all",
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "30",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "30",
+                          "padding": "30",
+                          "maxWidth": "30"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️VM_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachines\"\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "20",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "20",
+                          "padding": "20",
+                          "maxWidth": "20"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachines\"\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, subscriptionId\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, resourceGroup, subscriptionResourceId=id, subscriptionName = name\r\n                       ) on subscriptionId\r\n| project VMname,subscriptionName,OS_Type, resourceGroup\r\n| join kind=leftouter (\r\nresources\r\n| where type == \"microsoft.network/networkinterfaces\"\r\n| extend Server=tostring(split(properties.virtualMachine.id, \"/\")[-1])\r\n| extend name_1=tostring(properties.ipConfigurations[0].name)\r\n| extend privateIPAddress_1=tostring(properties.ipConfigurations[0].properties.privateIPAddress)\r\n| extend name_2=tostring(properties.ipConfigurations[1].name)\r\n| extend privateIPAddress_2=tostring(properties.ipConfigurations[1].properties.privateIPAddress)\r\n| project Server, Name_1=name_1, privateIPAddress_1,Name_2=name_2, privateIPAddress_2) on $left.VMname==$right.Server\r\n| project-away Server, resourceGroup",
+                          "size": 0,
+                          "title": "Overall servers list",
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          }
+                        },
+                        "name": "Overall servers list",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Overall servers list"
+                  },
+                  "name": "Overall servers list",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "items": [
+                      {
+                        "type": 1,
+                        "content": {
+                          "json": "## Search servers",
+                          "style": "success"
+                        },
+                        "customWidth": "50",
+                        "name": "text - 2",
+                        "styleSettings": {
+                          "margin": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "value::all"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "92e74e41-1fda-4751-b5ff-1e9512e9bffc",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "Subscription",
+                              "type": 6,
+                              "multiSelect": true,
+                              "quote": "'",
+                              "delimiter": ",",
+                              "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| where name contains \"SAP\"\r\n| project id",
+                              "crossComponentResources": [
+                                "value::all"
+                              ],
+                              "typeSettings": {
+                                "additionalResourceOptions": [
+                                  "value::all"
+                                ],
+                                "showDefault": false
+                              },
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "defaultValue": "value::all",
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formVertical",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "50",
+                        "name": "parameters - 0",
+                        "styleSettings": {
+                          "margin": "50",
+                          "padding": "50",
+                          "maxWidth": "50"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "parameters": [
+                            {
+                              "id": "4963187c-2d1d-4e26-9ea7-bb056dec84ff",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "SearchVM",
+                              "label": "Search VM🔎",
+                              "type": 1,
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "value": "biespplx00004 biesppsx00412 biesppsx00414 biesppsx00415 biesppsx00416 biesppsx00417 biesppsx00418 biesppsx00419 biesppsx00420 biesppsx00421"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 0,
+                          "resourceType": "microsoft.operationalinsights/workspaces"
+                        },
+                        "customWidth": "85",
+                        "name": "parameters - 3",
+                        "styleSettings": {
+                          "margin": "85",
+                          "padding": "85",
+                          "maxWidth": "85"
+                        }
+                      },
+                      {
+                        "type": 9,
+                        "content": {
+                          "version": "KqlParameterItem/1.0",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "parameters": [
+                            {
+                              "id": "278dd32c-d5cb-49a9-aedc-73c667e06e8e",
+                              "version": "KqlParameterItem/1.0",
+                              "name": "🖥️VM_Count🔚",
+                              "type": 1,
+                              "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachines\"\r\n| where name in~ (split(\"{SearchVM}\", ' '))\r\n| count",
+                              "crossComponentResources": [
+                                "{Subscription}"
+                              ],
+                              "timeContext": {
+                                "durationMs": 86400000
+                              },
+                              "queryType": 1,
+                              "resourceType": "microsoft.resourcegraph/resources"
+                            }
+                          ],
+                          "style": "formHorizontal",
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources"
+                        },
+                        "customWidth": "15",
+                        "name": "parameters - 5",
+                        "styleSettings": {
+                          "margin": "15",
+                          "padding": "15",
+                          "maxWidth": "15"
+                        }
+                      },
+                      {
+                        "type": 3,
+                        "content": {
+                          "version": "KqlItem/1.0",
+                          "query": "resources\r\n| where type =~ \"microsoft.compute/virtualmachines\"\r\n| where name in~ (split(\"{SearchVM}\", ' '))\r\n| extend OS_Type = tostring(properties.storageProfile.osDisk.osType)\r\n| extend resourceGroupResourceID= strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup)\r\n| extend resourceGroupName=resourceGroup\r\n| project VMname=name, VmId=id, OS_Type, subscriptionId\r\n| join kind=leftouter (\r\n                        resourcecontainers\r\n                        | where type == 'microsoft.resources/subscriptions'\r\n                        | project subscriptionId, resourceGroup, subscriptionResourceId=id, subscriptionName = name\r\n                       ) on subscriptionId\r\n| project VMname,subscriptionName,OS_Type, resourceGroup\r\n| join kind=leftouter (\r\nresources\r\n| where type == \"microsoft.network/networkinterfaces\"\r\n| extend Server=tostring(split(properties.virtualMachine.id, \"/\")[-1])\r\n| extend name_1=tostring(properties.ipConfigurations[0].name)\r\n| extend privateIPAddress_1=tostring(properties.ipConfigurations[0].properties.privateIPAddress)\r\n| extend name_2=tostring(properties.ipConfigurations[1].name)\r\n| extend privateIPAddress_2=tostring(properties.ipConfigurations[1].properties.privateIPAddress)\r\n| project Server, Name_1=name_1, privateIPAddress_1,Name_2=name_2, privateIPAddress_2) on $left.VMname==$right.Server\r\n| project-away Server, resourceGroup",
+                          "size": 0,
+                          "title": "Search servers",
+                          "showRefreshButton": true,
+                          "showExportToExcel": true,
+                          "queryType": 1,
+                          "resourceType": "microsoft.resourcegraph/resources",
+                          "crossComponentResources": [
+                            "{Subscription}"
+                          ],
+                          "gridSettings": {
+                            "rowLimit": 10000,
+                            "filter": true
+                          }
+                        },
+                        "name": "Search servers",
+                        "styleSettings": {
+                          "showBorder": true
+                        }
+                      }
+                    ]
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "selectedTab",
+                    "comparison": "isEqualTo",
+                    "value": "Search servers"
+                  },
+                  "name": "Search servers",
+                  "styleSettings": {
+                    "showBorder": true
+                  }
+                }
+              ]
+            },
+            "name": "group - 6"
+          }
+        ]
+      },
+      "name": "group - 0",
+      "styleSettings": {
+        "showBorder": true
+      }
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
